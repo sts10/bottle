@@ -1,6 +1,8 @@
 #!/bin/bash
 KEYFILE=/home/$USER/age/archive.txt
 
+echo $1
+
 # Check that keyfile exists
 if [ ! -f "$KEYFILE" ]; then
   echo "$KEYFILE does not exist."
@@ -9,22 +11,39 @@ if [ ! -f "$KEYFILE" ]; then
   exit 1
 fi
 
+if [ -z "$1" ]
+then
+  echo "No target supplied. Run bottle help for help."
+  exit 1
+fi
+
 # if given a specific archive-type file,
 # decrypt and extract it to current working directory
 if [[ $1 == *.tar.gz.age ]]
 then
-  if [ -z "$1" ]
-    then
-      echo "No target supplied. Run bottle help for help."
-      exit 1
-  fi
+  echo "Think this is a tar'd bottle"
   OUTPUTDIR="$(basename "${1}" .tar.gz.age)"
   mkdir $OUTPUTDIR
   age --decrypt -i $KEYFILE "$1" | tar -xzP -C $OUTPUTDIR
-elif [ -d "$1" ]
+elif [[ $1 == *.age ]]
+then
+  # If given a simple age file, (attempt to) decrypt it 
+  # with KEYFILE to current working directory
+  echo "Think this is a .age file"
+  OUTPUTFILE="$(basename "${1}" .age)"
+  age --decrypt -i $KEYFILE "$1" > $OUTPUTFILE
+elif [[ -f "$1" ]]
+then
+  # If given a file that doesn't have a .age extension,
+  # encrypt it with $KEYFILE.
+  echo "Think this is a normal file." 
+  echo "Attempting to encrypt"
+  age --encrypt -i $KEYFILE "$1" > "$1".age
+elif [[ -d "$1" ]]
+then
   # If given a directory...
   # compress and encrypt it to current working directory
-then
+  echo "think this is a directory to bottle"
   OUTPUTDIR="$(dirname .)"
   OUTPUTDEST="$(basename "${1}")"
   tar -cz -C "$1" $OUTPUTDIR --absolute-names "$1" | age --encrypt -i $KEYFILE > $OUTPUTDEST.tar.gz.age
