@@ -26,8 +26,9 @@ then
   tar -cz -C "$2" $OUTPUTDIR --absolute-names "$2" | age --encrypt -i ~/age/archive.txt > $OUTPUTDEST.tar.gz.age
 else
   echo "bottle HELP"
-  echo "  Compress and encrypt directories with:"
+  echo ""
+  echo "Compress and encrypt directories with:"
   echo "    bottle cork <path/to/directory>"
-  echo "  Extract and decrypt directories with:"
+  echo "Extract and decrypt directories with:"
   echo "    bottle pop <path/to/file>.tar.gz.age"
 fi
