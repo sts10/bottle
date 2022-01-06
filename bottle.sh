@@ -14,6 +14,11 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
+if [[ "$1" = "." ]]; then
+        echo "Can't run on current working directory. Run bottle --help for help."
+        exit 1
+fi
+
 if [ ! -z "$2" ]; then
         echo "Too many parameters given."
         echo "bottle only accepts one parameter."
