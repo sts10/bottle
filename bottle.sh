@@ -36,11 +36,22 @@ elif [[ -d "$1" ]]; then
 	OUTPUTDIR="$(dirname .)"
 	OUTPUTDEST="$(basename "${1}")"
 	tar -cz -C "$1" "$OUTPUTDIR" --absolute-names "$ABSOLUTEINPUT" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST".tar.gz.age
+elif [[ $1 = "help" ]]; then
+
+        echo "bottle"
+        echo "Archive files and directories using age encryption and tar"
+        echo ""
+        echo "USAGE:"
+        echo "    bottle [TARGET]"
+        echo "    TARGET can be a directory or file to encrypt"
+        echo "    or a .tar.gz.age or .age file to decrypt"
+        echo ""
+	echo "EXAMPLES:"
+	echo "    Compress and encrypt directories:"
+	echo "        bottle <path/to/directory-to-bottle>"
+	echo "    Extract and decrypt directories:"
+	echo "        bottle <path/to/file>.tar.gz.age"
 else
-	echo "bottle"
-	echo ""
-	echo "Compress and encrypt directories with:"
-	echo "    bottle <path/to/directory-to-bottle>"
-	echo "Extract and decrypt directories with:"
-	echo "    bottle <path/to/file>.tar.gz.age"
+        echo "Didn't understand command"
+        echo "run bottle help for help"
 fi
