@@ -59,6 +59,6 @@ elif [[ "$1" = "help" ]] || [[ "$1" = "--help" ]] || [[ "$1" = "-h" ]]; then
 	echo "    Extract and decrypt directories:"
 	echo "        bottle <path/to/file>.tar.gz.age"
 else
-        echo "Didn't understand command"
+        echo "Inputted file or directory not found."
         echo "run bottle --help for help"
 fi
