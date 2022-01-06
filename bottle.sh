@@ -20,19 +20,19 @@ fi
 if [[ $1 == *.tar.gz.age ]]
 then
   OUTPUTDIR="$(basename "${1}" .tar.gz.age)"
-  mkdir $OUTPUTDIR
-  age --decrypt -i $KEYFILE "$1" | tar -xzP -C $OUTPUTDIR
+  mkdir "$OUTPUTDIR"
+  age --decrypt -i "$KEYFILE" "$1" | tar -xzP -C "$OUTPUTDIR"
 elif [[ $1 == *.age ]]
 then
   # If given a simple age file, (attempt to) decrypt it 
   # with KEYFILE to current working directory
   OUTPUTFILE="$(basename "${1}" .age)"
-  age --decrypt -i $KEYFILE "$1" > $OUTPUTFILE
+  age --decrypt -i "$KEYFILE" "$1" > "$OUTPUTFILE"
 elif [[ -f "$1" ]]
 then
   # If given a file that doesn't have a .age extension,
   # encrypt it with $KEYFILE.
-  age --encrypt -i $KEYFILE "$1" > "$1".age
+  age --encrypt -i "$KEYFILE" "$1" > "$1".age
 elif [[ -d "$1" ]]
 then
   # If given a directory...
@@ -40,7 +40,7 @@ then
   ABSOLUTEINPUT="$(realpath "${1}")"
   OUTPUTDIR="$(dirname .)"
   OUTPUTDEST="$(basename "${1}")"
-  tar -cz -C "$1" $OUTPUTDIR --absolute-names "$ABSOLUTEINPUT" | age --encrypt -i $KEYFILE > $OUTPUTDEST.tar.gz.age
+  tar -cz -C "$1" "$OUTPUTDIR" --absolute-names "$ABSOLUTEINPUT" | age --encrypt -i "$KEYFILE" > "$OUTPUTDEST".tar.gz.age
 else
   echo "bottle"
   echo ""
