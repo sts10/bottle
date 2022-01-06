@@ -1,4 +1,6 @@
 *.tar
 *.tar.gz
 *.tar.gz.age
+*.tar.bz2
+*.tar.bz2.age
 practice/
