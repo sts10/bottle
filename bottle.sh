@@ -14,6 +14,12 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
+if [ ! -z "$2" ]; then
+        echo "Too many parameters given."
+        echo "bottle only accepts one parameter."
+        echo "If you wish to bottle more than one file, put them in a directory first. Then call bottle on that directory."
+fi
+
 # if given a specific archive-type file,
 # decrypt and extract it to current working directory
 if [[ $1 == *.tar.gz.age ]]; then
