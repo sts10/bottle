@@ -1,6 +1,8 @@
 # Bottle
 
-A shell script to compress and encrypt (and decrypt and extract) directories using [age](https://github.com/FiloSottile/age) and tar. Aims to be dead simple to use.
+A shell script to compress and encrypt (and decrypt and extract) directories using [age](https://github.com/FiloSottile/age) and tar. 
+
+Bottle has no config options and only takes a single parameter, in an attempt to follow age's philosophy of simplicity.
 
 ## Installation 
 
