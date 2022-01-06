@@ -5,7 +5,8 @@ A shell script to compress and encrypt (and decrypt and extract) directories usi
 ## Installation 
 
 1. [Install age](https://github.com/FiloSottile/age#installation). age-keygen should be included with that install (check with `age-keygen --version`).
-2. Install `bottle` tool and create an age key-pair (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first)
+2. Clone down this repository.
+3. Install `bottle` tool and create an age key-pair (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first)
 
 `bottle` will only ever use the age key-pair located at `~/age/archive.txt` (unless you edit the `bottle.sh` shell script).
 
