@@ -12,9 +12,12 @@ A shell script to compress and encrypt (and decrypt and extract) directories usi
 
 ## Usage
 
-Compress and encrypt a directory with `bottle <path/to/directory>`.
+Bottle will always create the outputted file **in the current working directory**. It will be named automatically based on the inputted file.
 
-Decrypt and extract an archive file (should have a `.tar.gz.age` file extension) with `<bottle path/to/archive.tar.gz.age>`.
+- Encrypt a file with `bottle <path/to/file>`
+- Compress and encrypt a directory with `bottle <path/to/directory>`. 
+- Decrypt an age-encrypted file with `bottle <path/to/file>.age`
+- Decrypt and extract a `.tar.gz.age` file with `bottle <path/to/archive>.tar.gz.age`.
 
 Get help with `bottle help`.
 
