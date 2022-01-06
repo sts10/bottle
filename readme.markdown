@@ -12,17 +12,16 @@ A shell script to compress and encrypt (and decrypt and extract) directories usi
 
 ## Usage
 
-Compress and encrypt a directory with `bottle cork path/to/directory`.
+Compress and encrypt a directory with `bottle <path/to/directory>`.
 
-Decrypt and extract an archive file (should have a `.tar.gz.age` file extension) with `bottle pop path/to/archive.tar.gz.age`.
+Decrypt and extract an archive file (should have a `.tar.gz.age` file extension) with `<bottle path/to/archive.tar.gz.age>`.
 
 Get help with `bottle help`.
 
 ## To do
 
-- [ ] Create a key at `~/age/bottle.key` if there isn't one already
-- [ ] Ability to "cork" with only access to a public key. (Looks like I would use age's `-R` flag.)
-- [ ] Ability to print (public) key at `~/age/bottle.key`
+- [ ] Ability to encrypt a directory with only access to a public key. (Looks like I would use age's `-R` flag.)
+- [ ] Ability to print (public) key of key-pair at `~/age/bottle.key`
 - [ ] An option to use your ssh key instead ([which age supports](https://github.com/FiloSottile/age#ssh-keys))
 
 Also: Should I (re-)write this in Go or Rust?

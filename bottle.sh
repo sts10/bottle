@@ -8,31 +8,31 @@ if [ ! -f "$KEYFILE" ]; then
   echo "mkdir ~/age && age-keygen -o ~/age/archive.txt"
   exit 1
 fi
-if [ "$1" == "pop" ]
+
+# if given a specific archive-type file,
+# decrypt and extract it to current working directory
+if [[ $1 == *.tar.gz.age ]]
 then
-  if [ -z "$2" ]
+  if [ -z "$1" ]
     then
       echo "No target supplied. Run bottle help for help."
       exit 1
   fi
-  OUTPUTDIR="$(basename "${2}" .tar.gz.age)"
+  OUTPUTDIR="$(basename "${1}" .tar.gz.age)"
   mkdir $OUTPUTDIR
-  age --decrypt -i $KEYFILE "$2" | tar -xzP -C $OUTPUTDIR
-elif [ "$1" == "cork" ]
+  age --decrypt -i $KEYFILE "$1" | tar -xzP -C $OUTPUTDIR
+elif [ -d "$1" ]
+  # If given a directory...
+  # compress and encrypt it to current working directory
 then
-  if [ -z "$2" ]
-    then
-      echo "No target supplied. Run bottle help for help."
-      exit 1
-  fi
   OUTPUTDIR="$(dirname .)"
-  OUTPUTDEST="$(basename "${2}")"
-  tar -cz -C "$2" $OUTPUTDIR --absolute-names "$2" | age --encrypt -i $KEYFILE > $OUTPUTDEST.tar.gz.age
+  OUTPUTDEST="$(basename "${1}")"
+  tar -cz -C "$1" $OUTPUTDIR --absolute-names "$1" | age --encrypt -i $KEYFILE > $OUTPUTDEST.tar.gz.age
 else
-  echo "bottle HELP"
+  echo "bottle"
   echo ""
   echo "Compress and encrypt directories with:"
-  echo "    bottle cork <path/to/directory>"
+  echo "    bottle <path/to/directory-to-bottle>"
   echo "Extract and decrypt directories with:"
-  echo "    bottle pop <path/to/file>.tar.gz.age"
+  echo "    bottle <path/to/file>.tar.gz.age"
 fi
