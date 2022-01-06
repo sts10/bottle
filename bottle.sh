@@ -17,6 +17,7 @@ if [ "$1" == "cork" ]
 then
   INPUTDIR="$(dirname "${2}")"
   OUTPUTDIR="$(dirname .)"
+  OUTPUTDEST="$(basename "${2}")"
   # OUTPUTBASENAME="$(basename "${2}")"
-  tar -cz -C "$2" $OUTPUTDIR --absolute-names "$2" | age --encrypt -i ~/age/archive.txt > "$2".tar.gz.age
+  tar -cz -C "$2" $OUTPUTDIR --absolute-names "$2" | age --encrypt -i ~/age/archive.txt > $OUTPUTDEST.tar.gz.age
 fi
