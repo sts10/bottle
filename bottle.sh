@@ -4,7 +4,7 @@ KEYFILE=/home/$USER/age/archive.txt
 # Check that keyfile exists
 if [ ! -f "$KEYFILE" ]; then
   echo "$KEYFILE does not exist."
-  echo "Creating an age key-pair for bottle to use by running:"
+  echo "You can create an age key-pair for bottle to use by running:"
   echo "mkdir ~/age && age-keygen -o ~/age/archive.txt"
   exit 1
 fi
