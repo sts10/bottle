@@ -10,7 +10,7 @@ if [ ! -f "$KEYFILE" ]; then
 fi
 
 if [ -z "$1" ]; then
-	echo "No target supplied. Run bottle help for help."
+	echo "No target supplied. Run bottle --help for help."
 	exit 1
 fi
 
@@ -42,7 +42,7 @@ elif [[ -d "$1" ]]; then
 	OUTPUTDIR="$(dirname .)"
 	OUTPUTDEST="$(basename "${1}")"
 	tar -cz -C "$1" "$OUTPUTDIR" --absolute-names "$ABSOLUTEINPUT" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST".tar.gz.age
-elif [[ $1 = "help" ]]; then
+elif [[ "$1" = "help" ]] || [[ "$1" = "--help" ]] || [[ "$1" = "-h" ]]; then
 
         echo "bottle"
         echo "Archive files and directories using age encryption and tar"
@@ -60,5 +60,5 @@ elif [[ $1 = "help" ]]; then
 	echo "        bottle <path/to/file>.tar.gz.age"
 else
         echo "Didn't understand command"
-        echo "run bottle help for help"
+        echo "run bottle --help for help"
 fi

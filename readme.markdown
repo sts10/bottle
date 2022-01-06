@@ -21,7 +21,7 @@ Bottle will always create the outputted file **in the current working directory*
 - Decrypt an age-encrypted file with `bottle <path/to/file>.age`
 - Decrypt and extract a `.tar.gz.age` file with `bottle <path/to/archive>.tar.gz.age`.
 
-Get help with `bottle help`.
+Get help with `bottle --help`.
 
 ## To do
 
