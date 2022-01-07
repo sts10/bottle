@@ -39,4 +39,6 @@ Get help with `bottle --help`.
 - [ ] Ability to print (public) key of key-pair at `~/age/bottle.key`
 - [ ] An option to use your ssh key instead ([which age supports](https://github.com/FiloSottile/age#ssh-keys))
 
-Also: Should I (re-)write this in Go or Rust?
+### Another language?
+
+I've idly thought about re-writing Bottle in Rust or Go. If Rust, I could use these libraries for [age](https://docs.rs/age/latest/age/) and [tar](https://docs.rs/tar/latest/tar/).
