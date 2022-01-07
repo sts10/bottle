@@ -12,6 +12,16 @@ Bottle has no config options and only takes a single parameter, in an attempt to
 
 `bottle` will only ever use the age key-pair located at `~/age/archive.txt` (unless you edit the `bottle.sh` shell script).
 
+### Uninstall Bottle
+
+Delete the Bottle script by running this:
+
+```bash
+sh -c 'rm "$(which bottle)"'
+```
+
+The age key that Bottle uses should be located at `~/age/archive.txt`. Note that deleting this file means you won't be able to decrypt any files or directories you encrypted with Bottle, so be cautious!
+
 ## Usage
 
 Bottle will always create the outputted file **in the current working directory**. It will be named automatically based on the inputted file.
