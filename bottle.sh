@@ -1,5 +1,6 @@
 #!/bin/bash
 KEYFILE=$HOME/age/archive.txt
+PROGRAM="${0##*/}"
 
 # Check that keyfile exists
 if [ ! -f "$KEYFILE" ]; then
@@ -10,12 +11,12 @@ if [ ! -f "$KEYFILE" ]; then
 fi
 
 if [ -z "$1" ]; then
-	echo "No target supplied. Run bottle --help for help."
+	echo "No target supplied. Run $PROGRAM --help for help."
 	exit 1
 fi
 
 if [[ "$1" = "." ]]; then
-	echo "Can't run on current working directory. Run bottle --help for help."
+	echo "Can't run on current working directory. Run $PROGRAM --help for help."
 	exit 1
 fi
 
@@ -53,17 +54,17 @@ elif [[ "$1" = "help" ]] || [[ "$1" = "--help" ]] || [[ "$1" = "-h" ]]; then
 	echo "Archive files and directories using age encryption and tar"
 	echo ""
 	echo "USAGE:"
-	echo "    bottle [TARGET]"
+	echo "    $PROGRAM [TARGET]"
 	echo "    TARGET can be a directory or file to encrypt"
 	echo "    or a .age file to decrypt."
 	echo "    If given a .tar.gz.age file, bottle will decrypt and extract contents."
 	echo ""
 	echo "EXAMPLES:"
 	echo "    Compress and encrypt directories:"
-	echo "        bottle <path/to/directory-to-bottle>"
+	echo "        $PROGRAM <path/to/directory-to-bottle>"
 	echo "    Extract and decrypt directories:"
-	echo "        bottle <path/to/file>.tar.gz.age"
+	echo "        $PROGRAM <path/to/file>.tar.gz.age"
 else
 	echo "Inputted file or directory not found."
-	echo "run bottle --help for help"
+	echo "run $PROGRAM --help for help"
 fi
