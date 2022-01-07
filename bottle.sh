@@ -1,5 +1,5 @@
 #!/bin/bash
-KEYFILE=/home/$USER/age/archive.txt
+KEYFILE=$HOME/age/archive.txt
 
 # Check that keyfile exists
 if [ ! -f "$KEYFILE" ]; then

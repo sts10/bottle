@@ -1,7 +1,7 @@
 echo "Installing bottle tool"
-cp -v bottle.sh /home/$USER/.local/bin/bottle
+cp -v bottle.sh $HOME/.local/bin/bottle
 
-KEYFILE=/home/$USER/age/archive.txt
+KEYFILE=$HOME/age/archive.txt
 if [ -f "$KEYFILE" ]; then
 	echo "You already have a key at $KEYFILE"
 	echo "bottle will use this key."
