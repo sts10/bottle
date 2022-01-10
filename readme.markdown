@@ -4,7 +4,7 @@ A shell script to compress and encrypt (and decrypt and extract) directories usi
 
 Bottle has no config options and only takes a single parameter, in an attempt to follow age's philosophy of simplicity.
 
-I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/), which should be more compatible outside of Ubuntu.
+Note that I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/), which should be more compatible outside of Ubuntu.
 
 ## Installation 
 
@@ -41,6 +41,6 @@ Get help with `bottle --help`.
 - [ ] Ability to print (public) key of key-pair at `~/age/bottle.key`
 - [ ] An option to use your ssh key instead ([which age supports](https://github.com/FiloSottile/age#ssh-keys))
 
-### Another language?
+## Rust port
 
-I've idly thought about re-writing Bottle in Rust or Go. If Rust, I could use these libraries for [age](https://docs.rs/age/latest/age/) and [tar](https://docs.rs/tar/latest/tar/).
+As noted above, I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/), which should be more compatible outside of Ubuntu. I encourage you to use that tool rather than this one!
