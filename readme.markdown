@@ -12,7 +12,7 @@ Note that I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle
 2. Clone down this repository.
 3. Install `bottle` tool and create an age key-pair (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first)
 
-`bottle` will only ever use the age key-pair located at `~/age/archive.txt` (unless you edit the `bottle.sh` shell script).
+`bottle` will only ever use the age key-pair located at `~/.bottle/bottle_key.txt` (unless you edit the `bottle.sh` shell script).
 
 ### Uninstall Bottle
 
@@ -22,7 +22,7 @@ Delete the Bottle script by running this:
 sh -c 'rm "$(which bottle)"'
 ```
 
-The age key that Bottle uses should be located at `~/age/archive.txt`. Note that deleting this file means you won't be able to decrypt any files or directories you encrypted with Bottle, so be cautious!
+The age key that Bottle uses should be located at `~/.bottle/bottle_key.txt`. Note that deleting this file means you won't be able to decrypt any files or directories you encrypted with Bottle, so be cautious!
 
 ## Usage
 
@@ -38,7 +38,7 @@ Get help with `bottle --help`.
 ## To do
 
 - [ ] Ability to encrypt a directory with only access to a public key. (Looks like I would use age's `-R` flag.)
-- [ ] Ability to print (public) key of key-pair at `~/age/bottle.key`
+- [ ] Ability to print (public) key of key-pair at `~/.bottle/bottle_key.txt`
 - [ ] An option to use your ssh key instead ([which age supports](https://github.com/FiloSottile/age#ssh-keys))
 
 ## Rust port

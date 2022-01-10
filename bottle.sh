@@ -1,12 +1,12 @@
 #!/bin/bash
-KEYFILE=$HOME/age/archive.txt
+KEYFILE=$HOME/.bottle/bottle_key.txt
 PROGRAM="${0##*/}"
 
 # Check that keyfile exists
 if [ ! -f "$KEYFILE" ]; then
 	echo "$KEYFILE does not exist."
 	echo "You can create an age key-pair for bottle to use by running:"
-	echo "mkdir ~/age && age-keygen -o ~/age/archive.txt"
+	echo "mkdir ~/.bottle && age-keygen -o ~/.bottle/bottle_key.txt"
 	exit 1
 fi
 
