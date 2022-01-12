@@ -35,6 +35,14 @@ Bottle will always create the outputted file **in the current working directory*
 
 Get help with `bottle --help`.
 
+## Known issues
+
+While this script seems to work on my laptop that runs Ubuntu 20.04, a Mac user has encountered an error when using it. More [here](https://github.com/sts10/bottle-rs/issues/1).
+
+## Note on the name
+
+This project is not affiliated with the similarly named [bitbottle](https://code.lag.net/robey/bitbottle) project, nor are the archive file formats compatible, to my knowledge. That said, it looks much more sophisticated than my tool, so it might fit your needs better. Also, sorry about the name conflict... worried I subconsciously copied it. Open an issue if you have a suggestion for a new name for this project!
+
 ## To do
 
 - [ ] Ability to encrypt a directory with only access to a public key. (Looks like I would use age's `-R` flag.)
@@ -43,4 +51,4 @@ Get help with `bottle --help`.
 
 ## Rust port
 
-As noted above, I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/), which should be more compatible outside of Ubuntu. I encourage you to use that tool rather than this one!
+As noted above, I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/), which should be more compatible outside of Ubuntu. It has [its own issues](https://github.com/sts10/bottle-rs/issues/1) though.
