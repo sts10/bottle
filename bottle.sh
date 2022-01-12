@@ -53,17 +53,29 @@ elif [[ -d "$1" ]]; then
 	OUTPUTDIR="$(dirname .)"
 	OUTPUTDEST="$(basename "${1}")"
 	tar -cz -C "$1" "$OUTPUTDIR" --absolute-names "$ABSOLUTEINPUT" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST".tar.gz.age
+elif [[ "$1" = "--public" ]] || [[ "$1" = "-p" ]]; then
+        echo "The public key of the age identity Bottle uses is:"
+        age-keygen -y "$KEYFILE"
+elif [[ "$1" = "--key" ]] || [[ "$1" = "-k" ]]; then
+        echo "Key info:"
+        echo "Age key is at:"
+        echo "$KEYFILE"
+        echo "Public key is:"
+        age-keygen -y "$KEYFILE"
 elif [[ "$1" = "help" ]] || [[ "$1" = "--help" ]] || [[ "$1" = "-h" ]]; then
-
 	echo "bottle"
 	echo "Archive files and directories using age encryption and tar"
-	echo ""
-	echo "USAGE:"
+        echo ""
+        echo "USAGE:"
 	echo "    $PROGRAM [TARGET]"
 	echo "    TARGET can be a directory or file to encrypt"
 	echo "    or a .age file to decrypt."
 	echo "    If given a .tar.gz.age file, bottle will decrypt and extract contents."
-	echo ""
+        echo ""
+        echo "FLAGS:"
+        echo "    -k, --key        Print location and public key of the age identity that Bottle uses."
+        echo "    -p, --public     Print the public key of the age identity that Bottle uses."
+        echo ""
 	echo "EXAMPLES:"
 	echo "    Compress and encrypt directories:"
 	echo "        $PROGRAM <path/to/directory-to-bottle>"
