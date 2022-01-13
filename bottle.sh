@@ -45,15 +45,22 @@ elif [[ $1 == *.age ]]; then
 elif [[ -f "$1" ]]; then
 	# If given a file that doesn't have a .age extension,
 	# encrypt it with $KEYFILE.
-	age --encrypt -i "$KEYFILE" "$1" >"$1".age
+        TS="$(date --rfc-3339=seconds)"
+        TSR="$(echo "${TS//:/_}")"
+        STAMP="$(echo "__bottled_${TSR// /-}")"
+	# age --encrypt -i "$KEYFILE" "$1" >"$1".age
+        age --encrypt -i "$KEYFILE" "$1" >"$1""$STAMP".age
 elif [[ -d "$1" ]]; then
 	# If given a directory...
 	# compress and encrypt it to current working directory
-	ABSOLUTEINPUT="$(abspath "${1}")"
+	# ABSOLUTEINPUT="$(abspath "${1}")"
 	OUTPUTDIR="$(dirname .)"
 	OUTPUTDEST="$(basename "${1}")"
+        TS="$(date --rfc-3339=seconds)"
+        TSR="$(echo "${TS//:/_}")"
+        STAMP="$(echo "__bottled_${TSR// /-}")"
 	# tar -cz -C "$1" "$OUTPUTDIR" --absolute-names "$ABSOLUTEINPUT" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST".tar.gz.age
-        tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST".tar.gz.age
+        tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST""$STAMP".tar.gz.age
 elif [[ "$1" = "--public" ]] || [[ "$1" = "-p" ]]; then
         echo "The public key of the age identity Bottle uses is:"
         age-keygen -y "$KEYFILE"
