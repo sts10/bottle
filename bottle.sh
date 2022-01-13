@@ -7,7 +7,7 @@ KEYFILE=$HOME/.bottle/bottle_key.txt
 # This variable of whetehr the user wants to print
 # a timestamp in encrypted output defaults to 0 (no)
 TIMESTAMPEDWANTED=0
-while getopts "thpk" option; do 
+while getopts "thpkl" option; do 
         case ${option} in
                 t )
                         # User gave a t flag, so flip this variable
@@ -16,17 +16,24 @@ while getopts "thpk" option; do
                         shift
                         ;;
                 p )
-                        echo "The public key of the age identity Bottle uses is:"
+                        # Print public key and exit
                         age-keygen -y "$KEYFILE"
                         exit 1
                         shift
                         ;;
-                k )
-                        echo "Key info:"
-                        echo "Age key is at:"
+                l )
+                        # Print location of age identity file and exit
                         echo "$KEYFILE"
-                        echo "Public key is:"
-                        age-keygen -y "$KEYFILE"
+                        exit 1
+                        shift
+                        ;;
+                k )
+                        # Print key info all together and exit
+                        echo "Age key file location:"
+                        echo "$KEYFILE"
+                        echo "The public key of that identity is:"
+                        # age-keygen -y "$KEYFILE"
+                        echo "$(age-keygen -y "$KEYFILE")"
                         exit 1
                         shift
                         ;;
@@ -35,23 +42,28 @@ while getopts "thpk" option; do
                         echo "Archive files and directories using age encryption, gzip, and tar"
                         echo ""
                         echo "USAGE:"
-                        echo "    $PROGRAM [FLAGS] [OPTIONS] [TARGET]"
+                        echo "    $PROGRAM [FLAGS] [TARGET]"
                         echo "    [Target] can be a directory or file to encrypt"
                         echo "    or a .age file to decrypt."
                         echo "    If given a .tar.gz.age file, bottle will decrypt and extract contents."
                         echo ""
                         echo "FLAGS:"
-                        echo "    -k     Print location and public key of the age identity that Bottle uses."
+                        echo "    -l     Print the location of the key of the age identity that Bottle uses."
                         echo "    -p     Print the public key of the age identity that Bottle uses."
-                        echo ""
-                        echo "OPTIONS:"
+                        echo "    -k     Print location and public key of the age identity that Bottle uses."
                         echo "    -t     If encrypting a file or directory, add timestamp to filename"
                         echo ""
                         echo "EXAMPLES:"
-                        echo "    Compress and encrypt directories:"
+                        echo "    Encrypt a file:"
+                        echo "        $PROGRAM <path/to/file-to-bottle>"
+                        echo "    Decrypt a file:"
+                        echo "        $PROGRAM <path/to/file.age>"
+                        echo "    Compress and encrypt a directory:"
                         echo "        $PROGRAM <path/to/directory-to-bottle>"
                         echo "    Extract and decrypt directories:"
                         echo "        $PROGRAM <path/to/file>.tar.gz.age"
+                        echo "    Compress and encrypt file with timestamp:"
+                        echo "        $PROGRAM -t <path/to/directory-to-bottle>"
                         exit 1
                         shift
                         ;;
