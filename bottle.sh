@@ -52,7 +52,8 @@ elif [[ -d "$1" ]]; then
 	ABSOLUTEINPUT="$(abspath "${1}")"
 	OUTPUTDIR="$(dirname .)"
 	OUTPUTDEST="$(basename "${1}")"
-	tar -cz -C "$1" "$OUTPUTDIR" --absolute-names "$ABSOLUTEINPUT" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST".tar.gz.age
+	# tar -cz -C "$1" "$OUTPUTDIR" --absolute-names "$ABSOLUTEINPUT" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST".tar.gz.age
+        tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST".tar.gz.age
 elif [[ "$1" = "--public" ]] || [[ "$1" = "-p" ]]; then
         echo "The public key of the age identity Bottle uses is:"
         age-keygen -y "$KEYFILE"
