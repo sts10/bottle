@@ -47,7 +47,7 @@ while getopts "thpkfl" option; do
 		echo "    -p     Print the public key of the age identity that Bottle uses"
 		echo "    -k     Print location and public key of the age identity that Bottle uses"
 		echo "    -f     Force overwrite of output file or directory, if it exists"
-                echo "    -t     If encrypting a file or directory, add timestamp to filename"
+		echo "    -t     If encrypting a file or directory, add timestamp to filename"
 		echo ""
 		echo "EXAMPLES:"
 		echo "    Encrypt a file:"
@@ -63,18 +63,18 @@ while getopts "thpkfl" option; do
 		exit 1
 		shift
 		;;
-        t)
-                # User gave a t flag, so flip this variable
-                # for later use
-                TIMESTAMPEDWANTED=1
-                shift
-                ;;
-        f)
-                # User gave a f flag, so flip this variable
-                # for later use
-                OVERWRITEALLOWED=1
-                shift
-                ;;
+	t)
+		# User gave a t flag, so flip this variable
+		# for later use
+		TIMESTAMPEDWANTED=1
+		shift
+		;;
+	f)
+		# User gave a f flag, so flip this variable
+		# for later use
+		OVERWRITEALLOWED=1
+		shift
+		;;
 	esac
 done
 
@@ -107,21 +107,21 @@ fi
 # decrypt and extract it to current working directory
 if [[ $1 == *.tar.gz.age ]]; then
 	OUTPUTDIR="$(basename "${1}" .tar.gz.age)"
-        if [ ! -f "$OUTPUTDIR" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
-                mkdir "$OUTPUTDIR"
-                age --decrypt -i "$KEYFILE" "$1" | tar -xzP -C "$OUTPUTDIR"
-        else
-                echo "Would create and decrypt to $OUTPUTDIR, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTDIR."
-        fi
+	if [ ! -f "$OUTPUTDIR" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
+		mkdir "$OUTPUTDIR"
+		age --decrypt -i "$KEYFILE" "$1" | tar -xzP -C "$OUTPUTDIR"
+	else
+		echo "Would create and decrypt to $OUTPUTDIR, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTDIR."
+	fi
 elif [[ $1 == *.age ]]; then
 	# If given a simple age file, (attempt to) decrypt it
 	# with KEYFILE to current working directory
 	OUTPUTFILE="$(basename "${1}" .age)"
-        if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
-                age --decrypt -i "$KEYFILE" "$1" >"$OUTPUTFILE"
-        else
-                echo "Would decrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
-        fi
+	if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
+		age --decrypt -i "$KEYFILE" "$1" >"$OUTPUTFILE"
+	else
+		echo "Would decrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
+	fi
 elif [[ -f "$1" ]]; then
 	# If given a file that doesn't have a .age extension,
 	# encrypt it with $KEYFILE.
@@ -135,12 +135,12 @@ elif [[ -f "$1" ]]; then
 		# an empty string
 		STAMP=""
 	fi
-        OUTPUTFILE="$1""$STAMP".age
-        if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
-                age --encrypt -i "$KEYFILE" "$1" >"$OUTPUTFILE"
-        else
-                echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
-        fi
+	OUTPUTFILE="$1""$STAMP".age
+	if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
+		age --encrypt -i "$KEYFILE" "$1" >"$OUTPUTFILE"
+	else
+		echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
+	fi
 elif [[ -d "$1" ]]; then
 	# If given a directory...
 	# compress and encrypt it to current working directory
@@ -156,12 +156,12 @@ elif [[ -d "$1" ]]; then
 		# an empty string
 		STAMP=""
 	fi
-        OUTPUTFILE="$OUTPUTDEST""$STAMP".tar.gz.age
-        if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
-                tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
-        else
-                echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
-        fi
+	OUTPUTFILE="$OUTPUTDEST""$STAMP".tar.gz.age
+	if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
+		tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
+	else
+		echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
+	fi
 else
 	echo "Inputted file or directory not found."
 	echo "run $PROGRAM -h for help"
