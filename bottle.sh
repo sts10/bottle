@@ -42,7 +42,7 @@ while getopts "thpkl" option; do
 		echo "Archive files and directories using age encryption, gzip, and tar"
 		echo ""
 		echo "USAGE:"
-		echo "    $PROGRAM [FLAGS] [TARGET]"
+		echo "    $PROGRAM [FLAGS] [Target]"
 		echo "    [Target] can be a directory or file to encrypt"
 		echo "    or a .age file to decrypt."
 		echo "    If given a .tar.gz.age file, bottle will decrypt and extract contents."
