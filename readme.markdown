@@ -8,7 +8,7 @@ Note that I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle
 
 ## Installation 
 
-1. [Install age](https://github.com/FiloSottile/age#installation). Bottle requires age version 1.0+. The related `age-keygen` should be included with that install (check with `age-keygen --version`).
+1. [Install age](https://github.com/FiloSottile/age#installation). Bottle requires age version 1.0+. The related `age-keygen`, which you'll also need, should be included with that install (check with `age-keygen --version`).
 2. Clone down this repository.
 3. Install `bottle` tool and create an age key-pair (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first)
 
@@ -33,7 +33,9 @@ Bottle will always create the outputted file **in the current working directory*
 - Decrypt an age-encrypted file with `bottle <path/to/file>.age`
 - Decrypt and extract a `.tar.gz.age` file with `bottle <path/to/archive>.tar.gz.age`.
 
-Get help with `bottle --help`.
+If encrypting, you can add a tiemstamp into the filename with `-t` flag. Force output file overwrite with `-f`. Display key info with `-k`. 
+
+For more (and general help): `bottle -h`.
 
 ## Known issues
 
@@ -45,8 +47,8 @@ This project is not affiliated with the similarly named [bitbottle](https://code
 
 ## To do
 
+- [X] Ability to print (public) key of key-pair at `~/.bottle/bottle_key.txt`
 - [ ] Ability to encrypt a directory with only access to a public key. (Looks like I would use age's `-R` flag.)
-- [ ] Ability to print (public) key of key-pair at `~/.bottle/bottle_key.txt`
 - [ ] An option to use your ssh key instead ([which age supports](https://github.com/FiloSottile/age#ssh-keys))
 
 ## Rust port
