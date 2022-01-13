@@ -1,6 +1,62 @@
 #!/bin/bash
-KEYFILE=$HOME/.bottle/bottle_key.txt
+
+# Get the invoking command to display in help text 
 PROGRAM="${0##*/}"
+# Hard-code the age key identity file
+KEYFILE=$HOME/.bottle/bottle_key.txt
+# This variable of whetehr the user wants to print
+# a timestamp in encrypted output defaults to 0 (no)
+TIMESTAMPEDWANTED=0
+while getopts "thpk" option; do 
+        case ${option} in
+                t )
+                        # User gave a t flag, so flip this variable
+                        # for later use
+                        TIMESTAMPEDWANTED=1
+                        shift
+                        ;;
+                p )
+                        echo "The public key of the age identity Bottle uses is:"
+                        age-keygen -y "$KEYFILE"
+                        exit 1
+                        shift
+                        ;;
+                k )
+                        echo "Key info:"
+                        echo "Age key is at:"
+                        echo "$KEYFILE"
+                        echo "Public key is:"
+                        age-keygen -y "$KEYFILE"
+                        exit 1
+                        shift
+                        ;;
+                h )
+                        echo "bottle"
+                        echo "Archive files and directories using age encryption, gzip, and tar"
+                        echo ""
+                        echo "USAGE:"
+                        echo "    $PROGRAM [FLAGS] [OPTIONS] [TARGET]"
+                        echo "    [Target] can be a directory or file to encrypt"
+                        echo "    or a .age file to decrypt."
+                        echo "    If given a .tar.gz.age file, bottle will decrypt and extract contents."
+                        echo ""
+                        echo "FLAGS:"
+                        echo "    -k     Print location and public key of the age identity that Bottle uses."
+                        echo "    -p     Print the public key of the age identity that Bottle uses."
+                        echo ""
+                        echo "OPTIONS:"
+                        echo "    -t     If encrypting a file or directory, add timestamp to filename"
+                        echo ""
+                        echo "EXAMPLES:"
+                        echo "    Compress and encrypt directories:"
+                        echo "        $PROGRAM <path/to/directory-to-bottle>"
+                        echo "    Extract and decrypt directories:"
+                        echo "        $PROGRAM <path/to/file>.tar.gz.age"
+                        exit 1
+                        shift
+                        ;;
+esac
+done
 
 # Check that keyfile exists
 if [ ! -f "$KEYFILE" ]; then
@@ -12,24 +68,20 @@ fi
 
 if [ -z "$1" ]; then
 	echo "No target supplied. Run $PROGRAM --help for help."
-	exit 1
+	exit 0
 fi
 
 if [[ "$1" = "." ]]; then
 	echo "Can't run on current working directory. Run $PROGRAM --help for help."
-	exit 1
+	exit 0
 fi
 
 if [ ! -z "$2" ]; then
 	echo "Too many parameters given."
 	echo "bottle only accepts one parameter."
 	echo "If you wish to bottle more than one file, put them in a directory first. Then call bottle on that directory."
+        exit 0
 fi
-
-# Function to get absolute path
-abspath() {
-	[[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
-}
 
 # If given a specific archive-type file,
 # decrypt and extract it to current working directory
@@ -45,51 +97,35 @@ elif [[ $1 == *.age ]]; then
 elif [[ -f "$1" ]]; then
 	# If given a file that doesn't have a .age extension,
 	# encrypt it with $KEYFILE.
-        TS="$(date --rfc-3339=seconds)"
-        TSR="$(echo "${TS//:/_}")"
-        STAMP="$(echo "__bottled_${TSR// /-}")"
+        if [ "$TIMESTAMPEDWANTED" == 1 ]; then
+                # Got a t flag, so we'll write a timestamp
+                TS="$(date --rfc-3339=seconds)"
+                TSR="$(echo "${TS//:/_}")"
+                STAMP="$(echo "__bottled_${TSR// /-}")"
+        else
+                # Didn't get a t flag, so we'll make STAMP
+                # an empty string
+                STAMP=""
+        fi
 	# age --encrypt -i "$KEYFILE" "$1" >"$1".age
         age --encrypt -i "$KEYFILE" "$1" >"$1""$STAMP".age
 elif [[ -d "$1" ]]; then
 	# If given a directory...
 	# compress and encrypt it to current working directory
-	# ABSOLUTEINPUT="$(abspath "${1}")"
 	OUTPUTDIR="$(dirname .)"
 	OUTPUTDEST="$(basename "${1}")"
-        TS="$(date --rfc-3339=seconds)"
-        TSR="$(echo "${TS//:/_}")"
-        STAMP="$(echo "__bottled_${TSR// /-}")"
-	# tar -cz -C "$1" "$OUTPUTDIR" --absolute-names "$ABSOLUTEINPUT" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST".tar.gz.age
+        if [ "$TIMESTAMPEDWANTED" == 1 ]; then
+                # Got a t flag, so we'll write a timestamp
+                TS="$(date --rfc-3339=seconds)"
+                TSR="$(echo "${TS//:/_}")"
+                STAMP="$(echo "__bottled_${TSR// /-}")"
+        else
+                # Didn't get a t flag, so we'll make STAMP
+                # an empty string
+                STAMP=""
+        fi
         tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTDEST""$STAMP".tar.gz.age
-elif [[ "$1" = "--public" ]] || [[ "$1" = "-p" ]]; then
-        echo "The public key of the age identity Bottle uses is:"
-        age-keygen -y "$KEYFILE"
-elif [[ "$1" = "--key" ]] || [[ "$1" = "-k" ]]; then
-        echo "Key info:"
-        echo "Age key is at:"
-        echo "$KEYFILE"
-        echo "Public key is:"
-        age-keygen -y "$KEYFILE"
-elif [[ "$1" = "help" ]] || [[ "$1" = "--help" ]] || [[ "$1" = "-h" ]]; then
-	echo "bottle"
-	echo "Archive files and directories using age encryption and tar"
-        echo ""
-        echo "USAGE:"
-	echo "    $PROGRAM [TARGET]"
-	echo "    TARGET can be a directory or file to encrypt"
-	echo "    or a .age file to decrypt."
-	echo "    If given a .tar.gz.age file, bottle will decrypt and extract contents."
-        echo ""
-        echo "FLAGS:"
-        echo "    -k, --key        Print location and public key of the age identity that Bottle uses."
-        echo "    -p, --public     Print the public key of the age identity that Bottle uses."
-        echo ""
-	echo "EXAMPLES:"
-	echo "    Compress and encrypt directories:"
-	echo "        $PROGRAM <path/to/directory-to-bottle>"
-	echo "    Extract and decrypt directories:"
-	echo "        $PROGRAM <path/to/file>.tar.gz.age"
 else
 	echo "Inputted file or directory not found."
-	echo "run $PROGRAM --help for help"
+	echo "run $PROGRAM -h for help"
 fi
