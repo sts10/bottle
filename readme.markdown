@@ -1,10 +1,10 @@
 # Bottle
 
-A shell script to compress and encrypt (and decrypt and extract) directories using [age](https://github.com/FiloSottile/age) and tar. 
+A shell script to compress and encrypt (and decrypt and extract) directories using [age](https://github.com/FiloSottile/age) and tar. At this point in time, this is **a toy project**, and **should not be used with sensitive and/or irreplaceable data/information!**
 
 Bottle has no config options and only takes a single parameter, in an attempt to follow age's philosophy of simplicity.
 
-Note that I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/), which should be more compatible outside of Ubuntu.
+Note that I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/).
 
 ## Installation 
 
@@ -35,11 +35,7 @@ Bottle will always create the outputted file **in the current working directory*
 
 If encrypting, you can add a tiemstamp into the filename with `-t` flag. Force output file overwrite with `-f`. Display key info with `-k`. 
 
-For more (and general help): `bottle -h`.
-
-## Known issues
-
-While this script seems to work on my laptop that runs Ubuntu 20.04, a Mac user has encountered an error when using it. More [here](https://github.com/sts10/bottle-rs/issues/1).
+For more help, run `bottle -h`.
 
 ## Note on the name
 
@@ -53,4 +49,4 @@ This project is not affiliated with the similarly named [bitbottle](https://code
 
 ## Rust port
 
-As noted above, I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/), which should be more compatible outside of Ubuntu. It has [its own issues](https://github.com/sts10/bottle-rs/issues/1) though.
+As noted above, I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/), however its current version [handles memory poorly](https://github.com/sts10/bottle-rs/issues/1).
