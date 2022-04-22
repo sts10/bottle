@@ -4,8 +4,6 @@ A shell script to compress and encrypt (and decrypt and extract) directories usi
 
 Bottle has no config options and only takes a single parameter, in an attempt to follow age's philosophy of simplicity.
 
-Note that I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/).
-
 ## Installation 
 
 1. [Install age](https://github.com/FiloSottile/age#installation). Bottle requires age version 1.0+. The related `age-keygen`, which you'll also need, should be included with that install (check with `age-keygen --version`).
@@ -49,4 +47,4 @@ This project is not affiliated with the similarly named [bitbottle](https://code
 
 ## Rust port
 
-As noted above, I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/), however its current version [handles memory poorly](https://github.com/sts10/bottle-rs/issues/1).
+I'm working on [a Rust port of Bottle](https://github.com/sts10/bottle-rs/), however its current version [handles memory poorly](https://github.com/sts10/bottle-rs/issues/1).
