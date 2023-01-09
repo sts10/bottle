@@ -1,6 +1,8 @@
 *.tar
 *.tar.gz
 *.tar.gz.age
+*.tar.zst
+*.tar.zst.age
 *.tar.bz2
 *.tar.bz2.age
 practice/
