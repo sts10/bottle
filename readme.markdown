@@ -2,13 +2,13 @@
 
 A shell script to compress and encrypt (and decrypt and extract) directories using [age](https://github.com/FiloSottile/age), zstd, and tar. At this point in time, this is **a toy project**, and **should not be used with sensitive and/or irreplaceable data/information!**
 
-Bottle has no config options and only takes a single parameter, in an attempt to follow age's philosophy of simplicity.
+Bottle has no configuration options and a limited number of optional flags, in an attempt to follow age's philosophy of simplicity.
 
 ## Installation 
 
 1. [Install age](https://github.com/FiloSottile/age#installation). Bottle requires age version 1.0+. The related `age-keygen`, which you'll also need, should be included with that install (check with `age-keygen --version` -- it should also be 1.0 or later).
 2. Clone down this Git repository.
-3. Install `bottle` tool and create an age key-pair (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first)
+3. Install `bottle` tool and create an age key-pair (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first). If you want to upgrade Bottle, follow this same procedure.
 
 Note that to use Bottle on directories, you'll need to have the `tar` command available.
 
