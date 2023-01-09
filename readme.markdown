@@ -16,14 +16,14 @@ I would **NOT** recommend Bottle for backing up large amounts of data across mul
 1. [Install age](https://github.com/FiloSottile/age#installation). Bottle requires age version 1.0+. The related `age-keygen`, which you'll also need, should be included with that install (check with `age-keygen --version` -- it should also be 1.0 or later).
 2. To use Bottle on directories, you'll need [tar](https://www.gnu.org/software/tar/) version 1.32 or higher available (run `tar --version` to check).
 
-### Installing Bottle
+### Install Bottle
 1. Clone down this Git repository.
-2. Install `bottle` tool and create an age key-pair (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first). If you want to upgrade Bottle, follow this same procedure.
+2. Install `bottle` tool and create a new age key-pair, or "Identity", (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first). If you want to upgrade Bottle, follow this same procedure.
 
-## What age key does Bottle use?
+## Which age key does Bottle use?
 Bottle will only ever use the age key-pair located at `~/.bottle/bottle_key.txt` (unless you edit the `bottle.sh` shell script).
 
-### Uninstall Bottle
+## Uninstalling Bottle
 
 Delete the Bottle script by running this:
 

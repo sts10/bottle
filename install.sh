@@ -12,3 +12,4 @@ else
         echo "Done creating Age Identity"
 fi
 echo "Bottle installation complete."
+echo "Run bottle -h for help."
