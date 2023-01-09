@@ -1,4 +1,4 @@
-echo "Installing bottle tool"
+echo "Installing bottle tool to .local/bin"
 cp -v bottle.sh $HOME/.local/bin/bottle
 
 KEYFILE=$HOME/.bottle/bottle_key.txt
@@ -9,4 +9,6 @@ else
         echo "$KEYFILE does not exist."
         echo "Creating an Age Identity for Bottle to use at $KEYFILE"
         mkdir ~/.bottle && age-keygen -o ~/.bottle/bottle_key.txt
+        echo "Done creating Age Identity"
 fi
+echo "Bottle installation complete."

@@ -27,20 +27,19 @@ while getopts "thpkfl" option; do
                 echo "Age key file location:"
                 echo "$KEYFILE"
                 echo "The public key of that identity is:"
-                # age-keygen -y "$KEYFILE"
                 echo "$(age-keygen -y "$KEYFILE")"
                 exit 1
                 shift
                 ;;
         h)
                 echo "bottle"
-                echo "Archive files and directories using age encryption, gzip, and tar"
+                echo "Archive files and directories using age encryption, zst, and tar"
                 echo ""
                 echo "USAGE:"
                 echo "    $PROGRAM [FLAGS] [Target]"
                 echo "    [Target] can be a directory or file to encrypt"
                 echo "    or a .age file to decrypt."
-                echo "    If given a .tar.gz.age file, bottle will decrypt and extract contents."
+                echo "    If given a .tar.zst.age or .tar.gz.age file, bottle will decrypt and extract contents."
                 echo ""
                 echo "FLAGS:"
                 echo "    -l     Print the location of the key of the age identity that Bottle uses"
@@ -57,7 +56,7 @@ while getopts "thpkfl" option; do
                 echo "    Compress and encrypt a directory:"
                 echo "        $PROGRAM <path/to/directory-to-bottle>"
                 echo "    Extract and decrypt directories:"
-                echo "        $PROGRAM <path/to/file>.tar.gz.age"
+                echo "        $PROGRAM <path/to/file>.tar.zst.age"
                 echo "    Compress and encrypt file with timestamp:"
                 echo "        $PROGRAM -t <path/to/directory-to-bottle>"
                 exit 1
@@ -103,13 +102,23 @@ if [ ! -z "$2" ]; then
         exit 0
 fi
 
-# If given a specific archive-type file,
-# decrypt and extract it to current working directory
 if [[ $1 == *.tar.gz.age ]]; then
+        # If given a g-zipped tar file,
+        # decrypt and extract it to current working directory
         OUTPUTDIR="$(basename "${1}" .tar.gz.age)"
         if [ ! -f "$OUTPUTDIR" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
                 mkdir "$OUTPUTDIR"
                 age --decrypt -i "$KEYFILE" "$1" | tar -xzP -C "$OUTPUTDIR"
+        else
+                echo "Would create and decrypt to $OUTPUTDIR, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTDIR."
+        fi
+elif [[ $1 == *.tar.zst.age ]]; then
+        # If given a zstd (Z-standard) tar file,
+        # decrypt and extract it to current working directory
+        OUTPUTDIR="$(basename "${1}" .tar.zst.age)"
+        if [ ! -f "$OUTPUTDIR" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
+                mkdir "$OUTPUTDIR"
+                age --decrypt -i "$KEYFILE" "$1" | tar -xP --zstd -C "$OUTPUTDIR"
         else
                 echo "Would create and decrypt to $OUTPUTDIR, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTDIR."
         fi
@@ -142,7 +151,7 @@ elif [[ -f "$1" ]]; then
                 echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
         fi
 elif [[ -d "$1" ]]; then
-        # If given a directory...
+        # If given a plain directory...
         # compress and encrypt it to current working directory
         OUTPUTDIR="$(dirname .)"
         OUTPUTDEST="$(basename "${1}")"
@@ -156,9 +165,10 @@ elif [[ -d "$1" ]]; then
                 # an empty string
                 STAMP=""
         fi
-        OUTPUTFILE="$OUTPUTDEST""$STAMP".tar.gz.age
+        OUTPUTFILE="$OUTPUTDEST""$STAMP".tar.zst.age
         if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
-                tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
+                # tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
+                tar -c --zstd -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
         else
                 echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
         fi
