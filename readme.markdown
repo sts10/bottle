@@ -4,15 +4,24 @@ A shell script to compress and encrypt (and decrypt and extract) directories usi
 
 Bottle has no configuration options and a limited number of optional flags, in an attempt to follow age's philosophy of simplicity.
 
+## What is this tool for? 
+
+Bottle is basically a wrapper around `age` to make the command even more user-friendly, especially for encrypting/decrypting directories. The use-case I wrote it for is backing up a small folder of about a dozen sensitive files (that rarely change) to Dropbox. 
+
+I would **NOT** recommend Bottle for backing up large amounts of data across multiple directories (like your enter User directory). For that, I'd recommend something like [restic](https://restic.net/).
+
 ## Installation 
 
+### Prerequisites 
 1. [Install age](https://github.com/FiloSottile/age#installation). Bottle requires age version 1.0+. The related `age-keygen`, which you'll also need, should be included with that install (check with `age-keygen --version` -- it should also be 1.0 or later).
-2. Clone down this Git repository.
-3. Install `bottle` tool and create an age key-pair (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first). If you want to upgrade Bottle, follow this same procedure.
+2. To use Bottle on directories, you'll need [tar](https://www.gnu.org/software/tar/) version 1.32 or higher available (run `tar --version` to check).
 
-Note that to use Bottle on directories, you'll need to have the `tar` command available.
+### Installing Bottle
+1. Clone down this Git repository.
+2. Install `bottle` tool and create an age key-pair (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first). If you want to upgrade Bottle, follow this same procedure.
 
-`bottle` will only ever use the age key-pair located at `~/.bottle/bottle_key.txt` (unless you edit the `bottle.sh` shell script).
+## What age key does Bottle use?
+Bottle will only ever use the age key-pair located at `~/.bottle/bottle_key.txt` (unless you edit the `bottle.sh` shell script).
 
 ### Uninstall Bottle
 
