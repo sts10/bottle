@@ -61,6 +61,8 @@ while getopts "thpkfln" option; do
                 echo "        $PROGRAM <path/to/file>.tar.zst.age"
                 echo "    Encrypt a directory without compressing:"
                 echo "        $PROGRAM -n <path/to/directory-to-bottle>"
+                echo "    Compress and encrypt directory, over-writing existing encrypted directory:"
+                echo "        $PROGRAM -f <path/to/directory-to-bottle>"
                 echo "    Compress and encrypt directory and add timestamp to resulting file name:"
                 echo "        $PROGRAM -t <path/to/directory-to-bottle>"
                 exit 0
