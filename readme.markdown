@@ -70,7 +70,19 @@ EXAMPLES:
 
 Note that Bottle will always create the outputted file **in the current working directory**. It will be named automatically based on the inputted file.
 
-## Note on the name
+## Un-Bottling with Bottle (Troubleshooting)
+
+Let's say you have a `.tar.zst.age` file (or `.tar.gz.age` file) that you encrypted with Bottle, but now you can't install or get the `bottle` tool to work. Here's a procedure for decrypting and extracting it _without_ using Bottle (though you still need the `bottle_key.txt` file you used to encrypt the file/directory).
+
+With [age installed](https://github.com/FiloSottile/age#installation), try the following three commands to decrypt and extract your Bottled directory:
+
+```bash
+age --decrypt -i ~/.bottle/bottle_key.txt my_archive.tar.zst.age > compressed_decrypted_archive.tar.zst
+mkdir my_archive
+tar -xf compressed_decrypted_archive.tar.zst -C ./my_archive
+```
+
+## Note on the name of this project
 
 This project is not affiliated with the similarly named [bitbottle](https://code.lag.net/robey/bitbottle) project, nor are the archive file formats compatible, to my knowledge. That said, it looks much more sophisticated than my tool, so it might fit your needs better. Also, sorry about the name conflict... worried I subconsciously copied it. Open an issue if you have a suggestion for a new name for this project!
 
