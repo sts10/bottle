@@ -63,7 +63,7 @@ while getopts "thpkfln" option; do
                 echo "        $PROGRAM -n <path/to/directory-to-bottle>"
                 echo "    Compress and encrypt directory and add timestamp to resulting file name:"
                 echo "        $PROGRAM -t <path/to/directory-to-bottle>"
-                exit 1
+                exit 0
                 shift
                 ;;
         t)
