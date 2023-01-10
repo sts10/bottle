@@ -1,6 +1,6 @@
 # Bottle
 
-A shell script to compress and encrypt (and decrypt and extract) directories using [age](https://github.com/FiloSottile/age), zstd, and tar. At this point in time, this is **a toy project**, and **should not be used with sensitive and/or irreplaceable data/information!**
+A shell script to compress and encrypt (and decrypt and extract) directories using [age](https://github.com/FiloSottile/age), [Zstandard compression](https://facebook.github.io/zstd/), and tar. At this point in time, this is **a toy project**, and **should not be used with sensitive and/or irreplaceable data/information!**
 
 Bottle has no configuration options and a limited number of optional flags, in an attempt to follow age's philosophy of simplicity.
 
