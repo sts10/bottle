@@ -70,9 +70,9 @@ EXAMPLES:
 
 Note that Bottle will always create the outputted file **in the current working directory**. It will be named automatically based on the inputted file.
 
-## Un-Bottling with Bottle (Troubleshooting)
+## Un-Bottling an encrypted file without Bottle script (Troubleshooting)
 
-Let's say you have a `.tar.zst.age` file (or `.tar.gz.age` file) that you encrypted with Bottle, but now you can't install or get the `bottle` tool to work. Here's a procedure for decrypting and extracting it _without_ using Bottle (though you still need the `bottle_key.txt` file you used to encrypt the file/directory).
+Let's say you have a `.tar.zst.age` file (or `.tar.gz.age` file) that you, at once point, encrypted with Bottle, but now you can't install or get the `bottle` tool to work. Here's a procedure for decrypting and extracting such a file _without_ using Bottle (though you still need the `bottle_key.txt` file you used to encrypt the file/directory).
 
 With [age installed](https://github.com/FiloSottile/age#installation), try the following three commands to decrypt and extract your Bottled directory:
 
