@@ -88,6 +88,7 @@ while getopts "thpkfln" option; do
                 ;;
         *)
                 echo "Unknown option/flag found. Run $PROGRAM -h for help."
+                exit 1
         esac
 done
 
