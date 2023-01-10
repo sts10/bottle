@@ -86,6 +86,8 @@ while getopts "thpkfln" option; do
                 NOCOMPRESSION=1
                 shift
                 ;;
+        *)
+                echo "Unknown option/flag found. Run $PROGRAM -h for help."
         esac
 done
 
