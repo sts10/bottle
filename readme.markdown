@@ -63,9 +63,9 @@ EXAMPLES:
     Encrypt a directory without compressing:
         bottle -n <path/to/directory-to-bottle>
     Compress and encrypt directory, over-writing existing encrypted directory:
-        bottle.sh -f <path/to/directory-to-bottle>
+        bottle -f <path/to/directory-to-bottle>
     Compress and encrypt directory and add timestamp to resulting file name:
-        bottle.sh -t <path/to/directory-to-bottle>
+        bottle -t <path/to/directory-to-bottle>
 ```
 
 Note that Bottle will always create the outputted file **in the current working directory**. It will be named automatically based on the inputted file.
