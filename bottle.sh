@@ -8,7 +8,7 @@ KEYFILE=$HOME/.bottle/bottle_key.txt
 # a timestamp in encrypted output defaults to 0 (no)
 TIMESTAMPEDWANTED=0
 OVERWRITEALLOWED=0
-while getopts "thpkfl" option; do
+while getopts "thpkfln" option; do
         case ${option} in
         p)
                 # Print public key and exit
@@ -39,14 +39,16 @@ while getopts "thpkfl" option; do
                 echo "    $PROGRAM [FLAGS] [Target]"
                 echo "    [Target] can be a directory or file to encrypt"
                 echo "    or a .age file to decrypt."
-                echo "    If given a .tar.zst.age or .tar.gz.age file, bottle will decrypt and extract contents."
+                echo "    If given a .tar.age, .tar.zst.age, or .tar.gz.age file, bottle will decrypt and extract contents."
                 echo ""
                 echo "FLAGS:"
+                echo "    -n     Do not use compression when encrypting a directory. By default, Bottle compresses directories before encrypting them."
+                echo "    -t     If encrypting a file or directory, add timestamp to filename"
+                echo "    -f     Force overwrite of output file or directory, if it exists"
                 echo "    -l     Print the location of the key of the age identity that Bottle uses"
                 echo "    -p     Print the public key of the age identity that Bottle uses"
                 echo "    -k     Print location and public key of the age identity that Bottle uses"
-                echo "    -f     Force overwrite of output file or directory, if it exists"
-                echo "    -t     If encrypting a file or directory, add timestamp to filename"
+                echo "    -h     Print this help text"
                 echo ""
                 echo "EXAMPLES:"
                 echo "    Encrypt a file:"
@@ -55,9 +57,11 @@ while getopts "thpkfl" option; do
                 echo "        $PROGRAM <path/to/file.age>"
                 echo "    Compress and encrypt a directory:"
                 echo "        $PROGRAM <path/to/directory-to-bottle>"
-                echo "    Extract and decrypt directories:"
+                echo "    Decrypt, decompress and extract directory:"
                 echo "        $PROGRAM <path/to/file>.tar.zst.age"
-                echo "    Compress and encrypt file with timestamp:"
+                echo "    Encrypt a directory without compressing:"
+                echo "        $PROGRAM -n <path/to/directory-to-bottle>"
+                echo "    Compress and encrypt directory and add timestamp to resulting file name:"
                 echo "        $PROGRAM -t <path/to/directory-to-bottle>"
                 exit 1
                 shift
@@ -72,6 +76,12 @@ while getopts "thpkfl" option; do
                 # User gave a f flag, so flip this variable
                 # for later use
                 OVERWRITEALLOWED=1
+                shift
+                ;;
+        n)
+                # User gave a n flag, so flip this variable
+                # for later use
+                NOCOMPRESSION=1
                 shift
                 ;;
         esac
@@ -122,6 +132,16 @@ elif [[ $1 == *.tar.zst.age ]]; then
         else
                 echo "Would create and decrypt to $OUTPUTDIR, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTDIR."
         fi
+elif [[ $1 == *.tar.age ]]; then
+        # If given a tar file,
+        # decrypt and extract it to current working directory
+        OUTPUTDIR="$(basename "${1}" .tar.age)"
+        if [ ! -f "$OUTPUTDIR" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
+                mkdir "$OUTPUTDIR"
+                age --decrypt -i "$KEYFILE" "$1" | tar -xP -C "$OUTPUTDIR"
+        else
+                echo "Would create and decrypt to $OUTPUTDIR, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTDIR."
+        fi
 elif [[ $1 == *.age ]]; then
         # If given a simple age file, (attempt to) decrypt it
         # with KEYFILE to current working directory
@@ -165,12 +185,24 @@ elif [[ -d "$1" ]]; then
                 # an empty string
                 STAMP=""
         fi
-        OUTPUTFILE="$OUTPUTDEST""$STAMP".tar.zst.age
-        if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
-                # tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
-                tar -c --zstd -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
+        if [ "$NOCOMPRESSION" == 1 ]; then
+                # User does NOT want to compress directory when creating tar file
+                OUTPUTFILE="$OUTPUTDEST""$STAMP".tar.age
+                if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
+                        tar -c -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
+                else
+                        echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
+                fi
         else
-                echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
+                # User DOES want to compress directory whiel making tar file
+                # We'll use Zstandard compression algorithm
+                OUTPUTFILE="$OUTPUTDEST""$STAMP".tar.zst.age
+                if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
+                        # tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
+                        tar -c --zstd -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
+                else
+                        echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
+                fi
         fi
 else
         echo "Inputted file or directory not found."
