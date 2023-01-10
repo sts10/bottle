@@ -13,13 +13,13 @@ while getopts "thpkfln" option; do
         p)
                 # Print public key and exit
                 age-keygen -y "$KEYFILE"
-                exit 1
+                exit 0
                 shift
                 ;;
         l)
                 # Print location of age identity file and exit
                 echo "$KEYFILE"
-                exit 1
+                exit 0
                 shift
                 ;;
         k)
@@ -28,7 +28,7 @@ while getopts "thpkfln" option; do
                 echo "$KEYFILE"
                 echo "The public key of that identity is:"
                 echo "$(age-keygen -y "$KEYFILE")"
-                exit 1
+                exit 0
                 shift
                 ;;
         h)
