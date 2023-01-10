@@ -77,6 +77,7 @@ This project is not affiliated with the similarly named [bitbottle](https://code
 ## To do
 
 - [X] Ability to print (public) key of key-pair at `~/.bottle/bottle_key.txt`
+- [ ] Resolve errors flagged by [shellcheck.net](https://www.shellcheck.net/)
 - [ ] Ability to encrypt a directory with only access to a public key. (Looks like I would use age's `-R` flag.)
 - [ ] An option to use your ssh key instead ([which age supports](https://github.com/FiloSottile/age#ssh-keys))
 
