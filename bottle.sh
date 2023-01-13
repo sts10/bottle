@@ -121,7 +121,6 @@ if [[ $1 == *.tar.*.age ]]; then
         extension="${filename#*.}"
         dirnameToExtractTo="${filename%%.*}"
         if [ ! -f "$dirnameToExtractTo" ] && [ ! -d "$dirnameToExtractTo" ]; then
-                mkdir "$dirnameToExtractTo"
                 case $extension in
                         tar.zst.age)
                                 compressionflag="--zstd"
@@ -129,7 +128,7 @@ if [[ $1 == *.tar.*.age ]]; then
                         tar.gz.age)
                                 compressionflag="-z"
                                 ;;
-                        tar.bzip2.age)
+                        tar.bzip2.age | tar.bz2.age )
                                 compressionflag="-j"
                                 ;;
                         tar.xz.age)
@@ -140,6 +139,7 @@ if [[ $1 == *.tar.*.age ]]; then
                                 exit 1
                                 ;;
                 esac
+                mkdir "$dirnameToExtractTo"
                 age --decrypt -i "$KEYFILE" "$1" | tar -xP "$compressionflag" -C "$dirnameToExtractTo"
         else
                 echo "Would create and decrypt to destination '$dirnameToExtractTo', but it already exists. Delete or rename existing directory or file, then run $PROGRAM again."
