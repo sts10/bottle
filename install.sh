@@ -1,4 +1,6 @@
-echo "Installing bottle tool to .local/bin"
+#!/bin/bash
+
+echo "Installing bottle tool to ~/.local/bin/bottle"
 cp -v bottle.sh $HOME/.local/bin/bottle
 
 KEYFILE=$HOME/.bottle/bottle_key.txt
