@@ -97,20 +97,20 @@ if [ ! -f "$KEYFILE" ]; then
 fi
 
 if [ -z "$1" ]; then
-        echo "No target supplied. Run $PROGRAM --help for help."
-        exit 0
+        echo "No target supplied. Run $PROGRAM -h for help."
+        exit 1
 fi
 
 if [[ "$1" = "." ]]; then
-        echo "Can't run on current working directory. Run $PROGRAM --help for help."
-        exit 0
+        echo "Can't run on current working directory. Run $PROGRAM -h for help."
+        exit 1
 fi
 
 if [ -n "$2" ]; then
         echo "Too many parameters given."
         echo "bottle only accepts one parameter."
         echo "If you wish to bottle more than one file, put them in a directory first. Then call bottle on that directory."
-        exit 0
+        exit 1
 fi
 
 if [[ $1 == *.tar.*.age ]]; then
@@ -155,8 +155,8 @@ elif [[ $1 == *.tar.age ]]; then
                 echo "Would create and decrypt to $OUTPUTDIR, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTDIR."
         fi
 elif [[ $1 == *.age ]]; then
-        # If given a simple age file, (attempt to) decrypt it
-        # with KEYFILE to current working directory
+        # If given a simple age file, 
+        # (attempt to) decrypt it with KEYFILE to current working directory
         OUTPUTFILE="$(basename "${1}" .age)"
         if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
                 age --decrypt -i "$KEYFILE" "$1" >"$OUTPUTFILE"
@@ -165,16 +165,14 @@ elif [[ $1 == *.age ]]; then
         fi
 elif [[ -f "$1" ]]; then
         # If given a file that doesn't have a .age extension,
-        # assume it's not encrypted and user wants to
-        # encrypt it with $KEYFILE.
+        # assume it's not encrypted and user wants to encrypt it with $KEYFILE.
         if [ "$TIMESTAMPEDWANTED" == 1 ]; then
-                # Got a t flag, so we'll write a timestamp
+                # Got a t flag, so we'll create a timestamp as a string
                 TS="$(date --rfc-3339=seconds)"
                 TSR="${TS//:/_}"
                 STAMP="__bottled_${TSR// /-}"
         else
-                # Didn't get a t flag, so we'll make STAMP
-                # an empty string
+                # Didn't get a t flag, so we'll make STAMP an empty string
                 STAMP=""
         fi
         OUTPUTFILE="$1""$STAMP".age
