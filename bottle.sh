@@ -4,8 +4,8 @@
 PROGRAM="${0##*/}"
 # Hard-code the age key identity file
 KEYFILE=$HOME/.bottle/bottle_key.txt
-# This variable of whetehr the user wants to print
-# a timestamp in encrypted output defaults to 0 (no)
+# This variable of whether the user wants to print a timestamp in encrypted output.
+# defaults to 0 (no)
 TIMESTAMPEDWANTED=0
 OVERWRITEALLOWED=0
 while getopts "thpkfln" option; do
@@ -14,26 +14,23 @@ while getopts "thpkfln" option; do
                 # Print public key and exit
                 age-keygen -y "$KEYFILE"
                 exit 0
-                shift
                 ;;
         l)
                 # Print location of age identity file and exit
                 echo "$KEYFILE"
                 exit 0
-                shift
                 ;;
         k)
                 # Print key info all together and exit
                 echo "Age key file location:"
                 echo "$KEYFILE"
                 echo "The public key of that identity is:"
-                echo "$(age-keygen -y "$KEYFILE")"
+                age-keygen -y "$KEYFILE"
                 exit 0
-                shift
                 ;;
         h)
                 echo "bottle"
-                echo "Archive files and directories using age encryption, zst, and tar"
+                echo "Archive files and directories using age encryption, Zstandard, and tar"
                 echo ""
                 echo "USAGE:"
                 echo "    $PROGRAM [FLAGS] [Target]"
@@ -43,7 +40,7 @@ while getopts "thpkfln" option; do
                 echo ""
                 echo "FLAGS:"
                 echo "    -n     Do not use compression when encrypting a directory. By default, Bottle compresses directories before encrypting them."
-                echo "    -t     If encrypting a file or directory, add timestamp to filename"
+                echo "    -t     If encrypting a file or directory, add timestamp to filename. Format is rfc3339."
                 echo "    -f     Force overwrite of output file or directory, if it exists"
                 echo "    -l     Print the location of the key of the age identity that Bottle uses"
                 echo "    -p     Print the public key of the age identity that Bottle uses"
@@ -66,7 +63,6 @@ while getopts "thpkfln" option; do
                 echo "    Compress and encrypt directory and add timestamp to resulting file name:"
                 echo "        $PROGRAM -t <path/to/directory-to-bottle>"
                 exit 0
-                shift
                 ;;
         t)
                 # User gave a t flag, so flip this variable
@@ -110,7 +106,7 @@ if [[ "$1" = "." ]]; then
         exit 0
 fi
 
-if [ ! -z "$2" ]; then
+if [ -n "$2" ]; then
         echo "Too many parameters given."
         echo "bottle only accepts one parameter."
         echo "If you wish to bottle more than one file, put them in a directory first. Then call bottle on that directory."
@@ -123,9 +119,9 @@ if [[ $1 == *.tar.*.age ]]; then
         fullfile=$1
         filename=$(basename -- "$fullfile")
         extension="${filename#*.}"
-        dirname="${filename%%.*}"
-        if [ ! -f "$dirname" ] && [ ! -d "$dirname" ]; then
-                mkdir "$dirname"
+        dirnameToExtractTo="${filename%%.*}"
+        if [ ! -f "$dirnameToExtractTo" ] && [ ! -d "$dirnameToExtractTo" ]; then
+                mkdir "$dirnameToExtractTo"
                 case $extension in
                         tar.zst.age)
                                 compressionflag="--zstd"
@@ -139,10 +135,14 @@ if [[ $1 == *.tar.*.age ]]; then
                         tar.xz.age)
                                 compressionflag="-J"
                                 ;;
+                        *)
+                                echo "Unknown compression file extention $extension found. Unable to unbottle."
+                                exit 1
+                                ;;
                 esac
-                age --decrypt -i "$KEYFILE" "$1" | tar -xP "$compressionflag" -C "$dirname"
+                age --decrypt -i "$KEYFILE" "$1" | tar -xP "$compressionflag" -C "$dirnameToExtractTo"
         else
-                echo "Would create and decrypt to destination '$dirname', but it already exists. Delete or rename existing directory or file."
+                echo "Would create and decrypt to destination '$dirnameToExtractTo', but it already exists. Delete or rename existing directory or file, then run $PROGRAM again."
         fi
 elif [[ $1 == *.tar.age ]]; then
         # If given an encrypted, UNCOMPRESSED tar file,
@@ -170,8 +170,8 @@ elif [[ -f "$1" ]]; then
         if [ "$TIMESTAMPEDWANTED" == 1 ]; then
                 # Got a t flag, so we'll write a timestamp
                 TS="$(date --rfc-3339=seconds)"
-                TSR="$(echo "${TS//:/_}")"
-                STAMP="$(echo "__bottled_${TSR// /-}")"
+                TSR="${TS//:/_}"
+                STAMP="__bottled_${TSR// /-}"
         else
                 # Didn't get a t flag, so we'll make STAMP
                 # an empty string
@@ -191,8 +191,8 @@ elif [[ -d "$1" ]]; then
         if [ "$TIMESTAMPEDWANTED" == 1 ]; then
                 # Got a t flag, so we'll write a timestamp
                 TS="$(date --rfc-3339=seconds)"
-                TSR="$(echo "${TS//:/_}")"
-                STAMP="$(echo "__bottled_${TSR// /-}")"
+                TSR="${TS//:/_}"
+                STAMP="__bottled_${TSR// /-}"
         else
                 # Didn't get a t flag, so we'll make STAMP
                 # an empty string

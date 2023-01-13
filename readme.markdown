@@ -21,7 +21,7 @@ I would **NOT** recommend Bottle for backing up large amounts of data across mul
 2. Install `bottle` tool and create a new age key-pair, or "Identity", (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first). If you want to upgrade Bottle, follow this same procedure.
 
 ## Which age key does Bottle use?
-Bottle will only ever use the age key-pair located at `~/.bottle/bottle_key.txt` (unless you edit the `bottle.sh` shell script).
+Bottle will only ever use the age key-pair located at `~/.bottle/bottle_key.txt` (unless, of course, you edit the `bottle.sh` shell script).
 
 ## Uninstalling Bottle
 
@@ -44,7 +44,7 @@ USAGE:
 
 FLAGS:
     -n     Do not use compression when encrypting a directory. By default, Bottle compresses directories before encrypting them.
-    -t     If encrypting a file or directory, add timestamp to filename
+    -t     If encrypting a file or directory, add timestamp to filename. Format is rfc3339.
     -f     Force overwrite of output file or directory, if it exists
     -l     Print the location of the key of the age identity that Bottle uses
     -p     Print the public key of the age identity that Bottle uses
