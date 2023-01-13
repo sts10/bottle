@@ -117,9 +117,16 @@ if [ ! -z "$2" ]; then
         exit 0
 fi
 
-if [[ $1 == *.tar.gz.age ]]; then
+if [[ $1 == *.tar.*.age ]]; then
         # If given a g-zipped tar file,
         # decrypt and extract it to current working directory
+        case $1 in
+          (*.*.*.*) extension=${1##*.};;
+          (.*.*)   extension=${1##*.};;
+          (.*)     extension="";;
+          (*.*)    extension=${1##*.};;
+          (*)      extension="";;
+        esac
         OUTPUTDIR="$(basename "${1}" .tar.gz.age)"
         if [ ! -f "$OUTPUTDIR" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
                 mkdir "$OUTPUTDIR"
