@@ -14,22 +14,19 @@ while getopts "thpkfln" option; do
                 # Print public key and exit
                 age-keygen -y "$KEYFILE"
                 exit 0
-                shift
                 ;;
         l)
                 # Print location of age identity file and exit
                 echo "$KEYFILE"
                 exit 0
-                shift
                 ;;
         k)
                 # Print key info all together and exit
                 echo "Age key file location:"
                 echo "$KEYFILE"
                 echo "The public key of that identity is:"
-                echo "$(age-keygen -y "$KEYFILE")"
+                age-keygen -y "$KEYFILE"
                 exit 0
-                shift
                 ;;
         h)
                 echo "bottle"
@@ -66,7 +63,6 @@ while getopts "thpkfln" option; do
                 echo "    Compress and encrypt directory and add timestamp to resulting file name:"
                 echo "        $PROGRAM -t <path/to/directory-to-bottle>"
                 exit 0
-                shift
                 ;;
         t)
                 # User gave a t flag, so flip this variable
@@ -110,7 +106,7 @@ if [[ "$1" = "." ]]; then
         exit 0
 fi
 
-if [ ! -z "$2" ]; then
+if [ -n "$2" ]; then
         echo "Too many parameters given."
         echo "bottle only accepts one parameter."
         echo "If you wish to bottle more than one file, put them in a directory first. Then call bottle on that directory."
@@ -162,8 +158,8 @@ elif [[ -f "$1" ]]; then
         if [ "$TIMESTAMPEDWANTED" == 1 ]; then
                 # Got a t flag, so we'll write a timestamp
                 TS="$(date --rfc-3339=seconds)"
-                TSR="$(echo "${TS//:/_}")"
-                STAMP="$(echo "__bottled_${TSR// /-}")"
+                TSR="${TS//:/_}"
+                STAMP="__bottled_${TSR// /-}"
         else
                 # Didn't get a t flag, so we'll make STAMP
                 # an empty string
@@ -183,8 +179,8 @@ elif [[ -d "$1" ]]; then
         if [ "$TIMESTAMPEDWANTED" == 1 ]; then
                 # Got a t flag, so we'll write a timestamp
                 TS="$(date --rfc-3339=seconds)"
-                TSR="$(echo "${TS//:/_}")"
-                STAMP="$(echo "__bottled_${TSR// /-}")"
+                TSR="${TS//:/_}"
+                STAMP="__bottled_${TSR// /-}"
         else
                 # Didn't get a t flag, so we'll make STAMP
                 # an empty string
