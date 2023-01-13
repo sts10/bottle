@@ -70,6 +70,47 @@ EXAMPLES:
 
 Note that Bottle will always create the outputted file **in the current working directory**. It will be named automatically based on the inputted file.
 
+## Compression 
+
+If Bottle is given a directory to "bottle", by default Bottle:
+1. Collects it into a single tar file;
+2. Compresses it with [Zstandard compression](https://facebook.github.io/zstd/);
+3. Encrypts that resulting file with age.
+
+Optionally, you can tell Bottle NOT to compress a given directory with the `-n` flag. This will create a file with the extension `.tar.age` (which Bottle can "unbottle").
+
+If given a single, unencrypted file to encrypt, Bottle will NOT use compression before encrypting the file. Bottle will simply encrypt it with age.
+
+### Zstandard
+
+[Zstandard compression](https://facebook.github.io/zstd) is "a fast compression algorithm, providing high compression ratios" made by Meta/Facebook. It was open-sourced in 2016. I think it's a good balance between compression/decompression speed and compression ratio. Bottle uses the default compression level of 3 out of 19, meaning it prioritizes speed over compression ratio. 
+
+### "Bringing your own" compression tool
+
+If you do want to "bring your own" compression tool, or pass an argument to `zstd`, you can run something like this:
+
+```bash
+tar -c -C directory-to-archive . | zstd -10 | age --encrypt -i ~/.bottle/bottle_key.txt > directory-to-archive.tar.zst.age
+```
+
+or you can put it in the `tar` command:
+
+```bash
+tar -I "zstd -10" -c -C directory-to-archive . | age --encrypt -i ~/.bottle/bottle_key.txt > directory-to-archive.tar.zst.age
+```
+
+or use [bzip2](https://en.wikipedia.org/wiki/Bzip2), as an example:
+
+```bash
+tar -I "bzip2 -2" -c -C directory-to-archive . | age --encrypt -i ~/.bottle/bottle_key.txt > directory-to-archive.tar.zst.age
+```
+
+### Unbottling GZipped files
+
+Note that Bottle can "unbottle," or extract, directories that are compressed with gzip (with file extension .tar.gz.age), as well as uncompressed bottled directories (file extension .tar.age). You don't need to add any flags, just run `bottle archive.tar.gz.age`
+
+Similarly, Bottle can unbottle uncompressed .tar.age files: `bottle archive.tar.age`.
+
 ## Un-Bottling an encrypted file without Bottle script (Troubleshooting)
 
 Let's say you have a `.tar.zst.age` file (or `.tar.gz.age` file) that you, at once point, encrypted with Bottle, but now you can't install or get the `bottle` tool to work. Here's a procedure for decrypting and extracting such a file _without_ using Bottle (though you still need the `bottle_key.txt` file you used to encrypt the file/directory).
