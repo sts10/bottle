@@ -102,7 +102,7 @@ tar -I "zstd -10" -c -C directory-to-archive . | age --encrypt -i ~/.bottle/bott
 or use [bzip2](https://en.wikipedia.org/wiki/Bzip2), as an example:
 
 ```bash
-tar -I "bzip2 -2" -c -C directory-to-archive . | age --encrypt -i ~/.bottle/bottle_key.txt > directory-to-archive.tar.zst.age
+tar -I "bzip2 -2" -c -C directory-to-archive . | age --encrypt -i ~/.bottle/bottle_key.txt > directory-to-archive.tar.bzip2.age
 ```
 
 ### Unbottling GZipped files
