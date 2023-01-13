@@ -4,8 +4,8 @@
 PROGRAM="${0##*/}"
 # Hard-code the age key identity file
 KEYFILE=$HOME/.bottle/bottle_key.txt
-# This variable of whetehr the user wants to print
-# a timestamp in encrypted output defaults to 0 (no)
+# This variable of whether the user wants to print a timestamp in encrypted output.
+# defaults to 0 (no)
 TIMESTAMPEDWANTED=0
 OVERWRITEALLOWED=0
 while getopts "thpkfln" option; do
@@ -30,7 +30,7 @@ while getopts "thpkfln" option; do
                 ;;
         h)
                 echo "bottle"
-                echo "Archive files and directories using age encryption, zst, and tar"
+                echo "Archive files and directories using age encryption, Zstandard, and tar"
                 echo ""
                 echo "USAGE:"
                 echo "    $PROGRAM [FLAGS] [Target]"
@@ -40,7 +40,7 @@ while getopts "thpkfln" option; do
                 echo ""
                 echo "FLAGS:"
                 echo "    -n     Do not use compression when encrypting a directory. By default, Bottle compresses directories before encrypting them."
-                echo "    -t     If encrypting a file or directory, add timestamp to filename"
+                echo "    -t     If encrypting a file or directory, add timestamp to filename. Format is rfc3339."
                 echo "    -f     Force overwrite of output file or directory, if it exists"
                 echo "    -l     Print the location of the key of the age identity that Bottle uses"
                 echo "    -p     Print the public key of the age identity that Bottle uses"
@@ -113,28 +113,39 @@ if [ -n "$2" ]; then
         exit 0
 fi
 
-if [[ $1 == *.tar.gz.age ]]; then
-        # If given a g-zipped tar file,
+if [[ $1 == *.tar.*.age ]]; then
+        # If given a compressed, encryped tar file,
         # decrypt and extract it to current working directory
-        OUTPUTDIR="$(basename "${1}" .tar.gz.age)"
-        if [ ! -f "$OUTPUTDIR" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
-                mkdir "$OUTPUTDIR"
-                age --decrypt -i "$KEYFILE" "$1" | tar -xzP -C "$OUTPUTDIR"
+        fullfile=$1
+        filename=$(basename -- "$fullfile")
+        extension="${filename#*.}"
+        dirnameToExtractTo="${filename%%.*}"
+        if [ ! -f "$dirnameToExtractTo" ] && [ ! -d "$dirnameToExtractTo" ]; then
+                mkdir "$dirnameToExtractTo"
+                case $extension in
+                        tar.zst.age)
+                                compressionflag="--zstd"
+                                ;;
+                        tar.gz.age)
+                                compressionflag="-z"
+                                ;;
+                        tar.bzip2.age)
+                                compressionflag="-j"
+                                ;;
+                        tar.xz.age)
+                                compressionflag="-J"
+                                ;;
+                        *)
+                                echo "Unknown compression file extention $extension found. Unable to unbottle."
+                                exit 1
+                                ;;
+                esac
+                age --decrypt -i "$KEYFILE" "$1" | tar -xP "$compressionflag" -C "$dirnameToExtractTo"
         else
-                echo "Would create and decrypt to $OUTPUTDIR, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTDIR."
-        fi
-elif [[ $1 == *.tar.zst.age ]]; then
-        # If given a zstd (Z-standard) tar file,
-        # decrypt and extract it to current working directory
-        OUTPUTDIR="$(basename "${1}" .tar.zst.age)"
-        if [ ! -f "$OUTPUTDIR" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
-                mkdir "$OUTPUTDIR"
-                age --decrypt -i "$KEYFILE" "$1" | tar -xP --zstd -C "$OUTPUTDIR"
-        else
-                echo "Would create and decrypt to $OUTPUTDIR, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTDIR."
+                echo "Would create and decrypt to destination '$dirnameToExtractTo', but it already exists. Delete or rename existing directory or file, then run $PROGRAM again."
         fi
 elif [[ $1 == *.tar.age ]]; then
-        # If given a tar file,
+        # If given an encrypted, UNCOMPRESSED tar file,
         # decrypt and extract it to current working directory
         OUTPUTDIR="$(basename "${1}" .tar.age)"
         if [ ! -f "$OUTPUTDIR" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
@@ -154,6 +165,7 @@ elif [[ $1 == *.age ]]; then
         fi
 elif [[ -f "$1" ]]; then
         # If given a file that doesn't have a .age extension,
+        # assume it's not encrypted and user wants to
         # encrypt it with $KEYFILE.
         if [ "$TIMESTAMPEDWANTED" == 1 ]; then
                 # Got a t flag, so we'll write a timestamp
@@ -195,11 +207,10 @@ elif [[ -d "$1" ]]; then
                         echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
                 fi
         else
-                # User DOES want to compress directory whiel making tar file
+                # User DOES want to compress directory while making tar file
                 # We'll use Zstandard compression algorithm
                 OUTPUTFILE="$OUTPUTDEST""$STAMP".tar.zst.age
                 if [ ! -f "$OUTPUTFILE" ] || [ "$OVERWRITEALLOWED" == 1 ]; then
-                        # tar -cz -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
                         tar -c --zstd -C "$1" "$OUTPUTDIR" | age --encrypt -i "$KEYFILE" >"$OUTPUTFILE"
                 else
                         echo "Would encrypt to $OUTPUTFILE, but it already exists. Re-run with -f flag (force) to overwrite $OUTPUTFILE."
