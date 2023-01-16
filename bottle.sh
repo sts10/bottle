@@ -82,11 +82,8 @@ while getopts "thpkfln" option; do
         esac
 done
 
-# echo "Before - variable one is: $1"
 # from https://www.howtogeek.com/778410/how-to-use-getopts-to-parse-linux-shell-script-options/#mixing-options-and-paramters
 shift "$(($OPTIND -1))"
-# echo "After - variable one is: $1"
-# echo "The rest of the arguments (operands)"
 
 # Check that keyfile exists
 if [ ! -f "$KEYFILE" ]; then
