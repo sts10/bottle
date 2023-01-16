@@ -65,28 +65,28 @@ while getopts "thpkfln" option; do
                 exit 0
                 ;;
         t)
-                # User gave a t flag, so flip this variable
-                # for later use
+                # User gave a t flag, so flip this variable for later use
                 TIMESTAMPEDWANTED=1
-                shift
                 ;;
         f)
-                # User gave a f flag, so flip this variable
-                # for later use
+                # User gave a f flag, so flip this variable for later use
                 OVERWRITEALLOWED=1
-                shift
                 ;;
         n)
-                # User gave a n flag, so flip this variable
-                # for later use
+                # User gave a n flag, so flip this variable for later use
                 NOCOMPRESSION=1
-                shift
                 ;;
         *)
                 echo "Unknown option/flag found. Run $PROGRAM -h for help."
                 exit 1
         esac
 done
+
+# echo "Before - variable one is: $1"
+# from https://www.howtogeek.com/778410/how-to-use-getopts-to-parse-linux-shell-script-options/#mixing-options-and-paramters
+shift "$(($OPTIND -1))"
+# echo "After - variable one is: $1"
+# echo "The rest of the arguments (operands)"
 
 # Check that keyfile exists
 if [ ! -f "$KEYFILE" ]; then
@@ -106,10 +106,10 @@ if [[ "$1" = "." ]]; then
         exit 1
 fi
 
-if [ -n "$2" ]; then
+if [ ! -z "$2" ]; then
         echo "Too many parameters given."
-        echo "bottle only accepts one parameter."
-        echo "If you wish to bottle more than one file, put them in a directory first. Then call bottle on that directory."
+        echo "$PROGRAM only accepts one parameter."
+        echo "If you wish to bottle more than one file, put them in a directory first. Then call $PROGRAM on that directory."
         exit 1
 fi
 
