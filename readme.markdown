@@ -40,10 +40,12 @@ USAGE:
     bottle [FLAGS] [Target]
     [Target] can be a directory or file to encrypt
     or a .age file to decrypt.
-    If given a .tar.age, .tar.zst.age, or .tar.gz.age file, bottle will decrypt and extract contents.
+    If given a .tar.age, .tar.zst.age, or .tar.gz.age file, bottle will decrypt and extract 
+    contents.
 
 FLAGS:
-    -n     Do not use compression when encrypting a directory. By default, Bottle compresses directories before encrypting them.
+    -n     Do not use compression when encrypting a directory. By default, Bottle compresses 
+           directories before encrypting them.
     -t     If encrypting a file or directory, add timestamp to filename. Format is rfc3339.
     -f     Force overwrite of output file or directory, if it exists
     -l     Print the location of the key of the age identity that Bottle uses
