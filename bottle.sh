@@ -2,15 +2,15 @@
 
 function print_alt_keyfile_suggestions() {
 	for MP in $(mount | grep -E "^\/dev\/(hd|sd)" | awk '{print $3}'); do
-                # Build string of this potentially alternate key file
+		# Build string of this potentially alternate key file
 		POTENTIAL_ALT_KEYFILE="$MP/.bottle/bottle_key.txt"
-                # Check whether it exists as a file at the Mount Point
+		# Check whether it exists as a file at the Mount Point
 		if [ -f "$POTENTIAL_ALT_KEYFILE" ]; then
 			ALT_KEYFILES+="$MP/.bottle/bottle_key.txt"
 		fi
 	done
-        # If length of ALT_KEYFILES arrays is "greater than" 0, print findings
-        # See https://www.shellcheck.net/wiki/SC2071
+	# If length of ALT_KEYFILES arrays is "greater than" 0, print findings
+	# See https://www.shellcheck.net/wiki/SC2071
 	if [[ ${#ALT_KEYFILES[@]} -gt 0 ]]; then
 		echo ""
 		echo "Found some potential Bottle key files on your attached devices you may wish to use:"
