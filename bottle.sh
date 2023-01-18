@@ -1,5 +1,33 @@
 #!/bin/bash
 
+function print_alt_keyfile_suggestions() { 
+        for MP in `mount | grep -E "^\/dev\/(hd|sd)"  | awk '{print $3}'`
+        do
+                POTENTIAL_ALT_KEYFILE=("$MP/.bottle/bottle_key.txt")
+                if [ -f "$POTENTIAL_ALT_KEYFILE" ]; then
+                        ALT_KEYFILES+="$MP/.bottle/bottle_key.txt"
+                fi
+        done
+        if [[ ${#ALT_KEYFILES[@]} > 0 ]]; then
+                echo ""
+                echo "Found some potential Bottle key files on your attached devices you may wish to use:"
+                for KF in $ALT_KEYFILES 
+                do
+                        echo "    $KF"
+                done
+        fi
+        return 0
+}
+
+function if_key_file_not_found() {
+        echo "Keyfile $KEYFILE does not exist."
+        print_alt_keyfile_suggestions
+        echo ""
+        echo "You can create an age key-pair for Bottle to use by running:"
+        echo "mkdir ~/.bottle && age-keygen -o ~/.bottle/bottle_key.txt"
+        exit 1
+}
+
 # Get the invoking command to display in help text
 PROGRAM="${0##*/}"
 # Hard-code the age key identity file
@@ -8,28 +36,41 @@ KEYFILE=$HOME/.bottle/bottle_key.txt
 # defaults to 0 (no)
 TIMESTAMPEDWANTED=0
 OVERWRITEALLOWED=0
-while getopts "thpkfln" option; do
+while getopts "thpPk:fln" option; do
         case ${option} in
         p)
                 # Print public key and exit
-                age-keygen -y "$KEYFILE"
-                exit 0
+                if [ -f "$KEYFILE" ]; then
+                        age-keygen -y "$KEYFILE"
+                        exit 0
+                else 
+                        if_key_file_not_found
+                fi
                 ;;
         l)
                 # Print location of age identity file and exit
                 echo "$KEYFILE"
                 exit 0
                 ;;
-        k)
+        P)
                 # Print key info all together and exit
-                echo "Age key file location:"
-                echo "$KEYFILE"
-                echo "The public key of that identity is:"
-                age-keygen -y "$KEYFILE"
-                exit 0
+                if [ -f "$KEYFILE" ]; then
+                        echo "Age key file location:"
+                        echo "$KEYFILE"
+                        echo "The public key of that identity is:"
+                        age-keygen -y "$KEYFILE"
+                        exit 0
+                else
+                        if_key_file_not_found
+                fi
+                ;;
+        k)
+                # Set KEYFILE location to location user specifies, rather
+                # than the default location
+                KEYFILE=${OPTARG}
                 ;;
         h)
-                echo "bottle"
+                echo "Bottle"
                 echo "Archive files and directories using age encryption, Zstandard, and tar"
                 echo ""
                 echo "USAGE:"
@@ -40,11 +81,12 @@ while getopts "thpkfln" option; do
                 echo ""
                 echo "FLAGS:"
                 echo "    -n     Do not use compression when encrypting a directory. By default, Bottle compresses directories before encrypting them."
-                echo "    -t     If encrypting a file or directory, add timestamp to filename. Format is rfc3339."
+                echo "    -t     If encrypting a file or directory, add timestamp to filename. Format is RFC3339."
+                echo "    -k     Set location of age key file for $PROGRAM to use (defaults to ~/.bottle/bottle_key.txt)"
                 echo "    -f     Force overwrite of output file or directory, if it exists"
                 echo "    -l     Print the location of the key of the age identity that Bottle uses"
                 echo "    -p     Print the public key of the age identity that Bottle uses"
-                echo "    -k     Print location and public key of the age identity that Bottle uses"
+                echo "    -P     Print location and public key of the age identity that Bottle uses"
                 echo "    -h     Print this help text"
                 echo ""
                 echo "EXAMPLES:"
@@ -56,6 +98,8 @@ while getopts "thpkfln" option; do
                 echo "        $PROGRAM <path/to/directory-to-bottle>"
                 echo "    Decrypt, decompress and extract directory:"
                 echo "        $PROGRAM <path/to/file>.tar.zst.age"
+                echo "    Compress and encrypt a directory with age key file in non-default location:"
+                echo "        $PROGRAM -k <path/to/age-identity-file> <path/to/directory-to-bottle>"
                 echo "    Encrypt a directory without compressing:"
                 echo "        $PROGRAM -n <path/to/directory-to-bottle>"
                 echo "    Compress and encrypt directory, over-writing existing encrypted directory:"
@@ -87,10 +131,7 @@ shift "$(($OPTIND -1))"
 
 # Check that keyfile exists
 if [ ! -f "$KEYFILE" ]; then
-        echo "$KEYFILE does not exist."
-        echo "You can create an age key-pair for bottle to use by running:"
-        echo "mkdir ~/.bottle && age-keygen -o ~/.bottle/bottle_key.txt"
-        exit 1
+        if_key_file_not_found
 fi
 
 if [ -z "$1" ]; then

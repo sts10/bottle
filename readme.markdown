@@ -21,7 +21,7 @@ I would **NOT** recommend Bottle for backing up large amounts of data across mul
 2. Install `bottle` tool and create a new age key-pair, or "Identity", (if one does not exist) by running `./install.sh` (may need to run `chmod a+x install.sh` first). If you want to upgrade Bottle, follow this same procedure.
 
 ## Which age key does Bottle use?
-Bottle will only ever use the age key-pair located at `~/.bottle/bottle_key.txt` (unless, of course, you edit the `bottle.sh` shell script).
+By default, Bottle uses the age key at `~/.bottle/bottle_key.txt`. User can use an age key at a different location by using the `-k` flag. 
 
 ## Uninstalling Bottle
 
@@ -31,43 +31,44 @@ Delete the Bottle script by running this:
 sh -c 'rm "$(which bottle)"'
 ```
 
-The age key that Bottle uses should be located at `~/.bottle/bottle_key.txt`. Note that deleting this file means you won't be able to decrypt any files or directories you encrypted with Bottle, so be cautious!
+Note that deleting your age key means you won't be able to decrypt any files or directories you encrypted with Bottle, so be cautious!
 
 ## Usage
 
 ```text
 USAGE:
-    bottle [FLAGS] [Target]
+    bottle.sh [FLAGS] [Target]
     [Target] can be a directory or file to encrypt
     or a .age file to decrypt.
-    If given a .tar.age, .tar.zst.age, or .tar.gz.age file, bottle will decrypt and extract 
-    contents.
+    If given a .tar.age, .tar.zst.age, or .tar.gz.age file, bottle will decrypt and extract contents.
 
 FLAGS:
-    -n     Do not use compression when encrypting a directory. By default, Bottle compresses 
-           directories before encrypting them.
-    -t     If encrypting a file or directory, add timestamp to filename. Format is rfc3339.
+    -n     Do not use compression when encrypting a directory. By default, Bottle compresses directories before encrypting them.
+    -t     If encrypting a file or directory, add timestamp to filename. Format is RFC3339.
+    -k     Set location of age key file for bottle.sh to use (defaults to ~/.bottle/bottle_key.txt)
     -f     Force overwrite of output file or directory, if it exists
     -l     Print the location of the key of the age identity that Bottle uses
     -p     Print the public key of the age identity that Bottle uses
-    -k     Print location and public key of the age identity that Bottle uses
+    -P     Print location and public key of the age identity that Bottle uses
     -h     Print this help text
 
 EXAMPLES:
     Encrypt a file:
-        bottle <path/to/file-to-bottle>
+        bottle.sh <path/to/file-to-bottle>
     Decrypt a file:
-        bottle <path/to/file.age>
+        bottle.sh <path/to/file.age>
     Compress and encrypt a directory:
-        bottle <path/to/directory-to-bottle>
+        bottle.sh <path/to/directory-to-bottle>
     Decrypt, decompress and extract directory:
-        bottle <path/to/file>.tar.zst.age
+        bottle.sh <path/to/file>.tar.zst.age
+    Compress and encrypt a directory with age key file in non-default location:
+        bottle.sh -k <path/to/age-identity-file> <path/to/directory-to-bottle>
     Encrypt a directory without compressing:
-        bottle -n <path/to/directory-to-bottle>
+        bottle.sh -n <path/to/directory-to-bottle>
     Compress and encrypt directory, over-writing existing encrypted directory:
-        bottle -f <path/to/directory-to-bottle>
+        bottle.sh -f <path/to/directory-to-bottle>
     Compress and encrypt directory and add timestamp to resulting file name:
-        bottle -t <path/to/directory-to-bottle>
+        bottle.sh -t <path/to/directory-to-bottle>
 ```
 
 Note that Bottle will always create the outputted file **in the current working directory**. It will be named automatically based on the inputted file.
