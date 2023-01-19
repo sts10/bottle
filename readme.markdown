@@ -37,7 +37,7 @@ Note that deleting your age key means you won't be able to decrypt any files or 
 
 ```text
 USAGE:
-    bottle.sh [FLAGS] [Target]
+    bottle [FLAGS] [Target]
     [Target] can be a directory or file to encrypt
     or a .age file to decrypt.
     If given a .tar.age, .tar.zst.age, or .tar.gz.age file, bottle will decrypt and extract contents.
@@ -45,7 +45,7 @@ USAGE:
 FLAGS:
     -n     Do not use compression when encrypting a directory. By default, Bottle compresses directories before encrypting them.
     -t     If encrypting a file or directory, add timestamp to filename. Format is RFC3339.
-    -k     Set location of age key file for bottle.sh to use (defaults to ~/.bottle/bottle_key.txt)
+    -k     Set location of age key file for bottle to use (defaults to ~/.bottle/bottle_key.txt)
     -f     Force overwrite of output file or directory, if it exists
     -l     Print the location of the key of the age identity that Bottle uses
     -p     Print the public key of the age identity that Bottle uses
@@ -54,21 +54,21 @@ FLAGS:
 
 EXAMPLES:
     Encrypt a file:
-        bottle.sh <path/to/file-to-bottle>
+        bottle <path/to/file-to-bottle>
     Decrypt a file:
-        bottle.sh <path/to/file.age>
+        bottle <path/to/file.age>
     Compress and encrypt a directory:
-        bottle.sh <path/to/directory-to-bottle>
+        bottle <path/to/directory-to-bottle>
     Decrypt, decompress and extract directory:
-        bottle.sh <path/to/file>.tar.zst.age
+        bottle <path/to/file>.tar.zst.age
     Compress and encrypt a directory with age key file in non-default location:
-        bottle.sh -k <path/to/age-identity-file> <path/to/directory-to-bottle>
+        bottle -k <path/to/age-identity-file> <path/to/directory-to-bottle>
     Encrypt a directory without compressing:
-        bottle.sh -n <path/to/directory-to-bottle>
+        bottle -n <path/to/directory-to-bottle>
     Compress and encrypt directory, over-writing existing encrypted directory:
-        bottle.sh -f <path/to/directory-to-bottle>
+        bottle -f <path/to/directory-to-bottle>
     Compress and encrypt directory and add timestamp to resulting file name:
-        bottle.sh -t <path/to/directory-to-bottle>
+        bottle -t <path/to/directory-to-bottle>
 ```
 
 Note that Bottle will always create the outputted file **in the current working directory**. It will be named automatically based on the inputted file.
