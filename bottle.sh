@@ -1,4 +1,8 @@
 #!/bin/bash
+# "Unofficial BASH strcit mode" settings 
+# (from http://redsymbol.net/articles/unofficial-bash-strict-mode/)
+set -euo pipefail
+IFS=$'\n\t'
 
 function print_alt_keyfile_suggestions() {
         for MP in $(mount | grep -E "^\/dev\/(hd|sd)" | awk '{print $3}'); do
@@ -38,6 +42,8 @@ KEYFILE=$HOME/.bottle/bottle_key.txt
 # defaults to 0 (no)
 TIMESTAMPEDWANTED=0
 OVERWRITEALLOWED=0
+NOCOMPRESSION=0
+
 while getopts "thpPk:fln" option; do
         case ${option} in
         p)
@@ -147,10 +153,10 @@ if [[ "$1" = "." ]]; then
         exit 1
 fi
 
-if [ -n "$2" ]; then
-        echo "Too many parameters given. $PROGRAM only accepts one parameter."
-        echo "If you wish to bottle more than one file, put them in a single directory first. Then call $PROGRAM on that directory."
-        exit 1
+if [[ $# -ne 1 ]]; then
+    echo "Too many parameters given. $PROGRAM only accepts one parameter."
+    echo "If you wish to bottle more than one file, put them in a single directory first. Then call $PROGRAM on that directory."
+    exit 1
 fi
 
 if [[ $1 == *.tar.*.age ]]; then
