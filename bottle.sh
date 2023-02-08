@@ -1,5 +1,5 @@
 #!/bin/bash
-# "Unofficial BASH strcit mode" settings 
+# "Unofficial BASH strcit mode" settings
 # (from http://redsymbol.net/articles/unofficial-bash-strict-mode/)
 set -euo pipefail
 IFS=$'\n\t'
@@ -153,14 +153,15 @@ if [[ "$1" = "." ]]; then
         exit 1
 fi
 
+# Count parameters given, comparing it to 1. If not 1, exit.
 if [[ $# -ne 1 ]]; then
-    echo "Too many parameters given. $PROGRAM only accepts one parameter."
-    echo "If you wish to bottle more than one file, put them in a single directory first. Then call $PROGRAM on that directory."
-    exit 1
+        echo "Too many parameters given. $PROGRAM only accepts one parameter."
+        echo "If you wish to bottle more than one file, put them in a single directory first. Then call $PROGRAM on that directory."
+        exit 1
 fi
 
 if [[ $1 == *.tar.*.age ]]; then
-        # If given a compressed, encryped tar file,
+        # If given a compressed, encrypted tar file,
         # decrypt and extract it to current working directory
         fullfile=$1
         filename=$(basename -- "$fullfile")
