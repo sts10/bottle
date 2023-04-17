@@ -6,9 +6,11 @@ Bottle has no configuration options and a limited number of optional flags, in a
 
 ## What is this tool for?
 
-Bottle is basically a wrapper around `age` to make the command even more user-friendly, especially for encrypting/decrypting directories. The use-case I wrote it for is backing up a small folder of about a dozen sensitive files (that rarely change) to Dropbox for my future self. In that way, it can be thought of a safe way to upload files to a cloud.
+Bottle is basically a wrapper around `age` to make the command even more user-friendly, especially for encrypting/decrypting directories. 
 
-I would **NOT** recommend Bottle for backing up large amounts of data across multiple directories (like your enter User directory). For that, I'd recommend something like [Restic](https://restic.net/).
+The use-case I wrote it for is backing up a small folder of about a dozen sensitive files (that rarely change) to Dropbox for my future self. In that way, it can be thought of a safe way to upload files to a cloud service that you might not completely trust.
+
+I would **NOT** recommend Bottle for backing up large amounts of data across multiple directories (like your entire User/ directory). For that, I'd recommend something like [Restic](https://restic.net/).
 
 ## Installation
 
