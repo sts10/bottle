@@ -1,5 +1,5 @@
 #!/bin/bash
-# "Unofficial BASH strcit mode" settings
+# "Unofficial BASH strict mode" settings
 # (from http://redsymbol.net/articles/unofficial-bash-strict-mode/)
 set -euo pipefail
 IFS=$'\n\t'
