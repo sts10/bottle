@@ -33,7 +33,9 @@ Delete the Bottle script by running this:
 sh -c 'rm "$(which bottle)"'
 ```
 
-Note that deleting your age key means you won't be able to decrypt any files or directories you encrypted with Bottle, so be cautious!
+This won't delete the age key that Bottle uses.
+
+Warning: if you delete the age key that Bottle uses, you won't be able to decrypt any files or directories you encrypted with Bottle, so be cautious!
 
 ## Usage
 
@@ -118,7 +120,7 @@ Similarly, Bottle can unbottle uncompressed .tar.age files: `bottle archive.tar.
 
 ## Un-Bottling an encrypted file without Bottle script (Troubleshooting)
 
-Let's say you have a `.tar.zst.age` file (or `.tar.gz.age` file) that you, at once point, encrypted with Bottle, but now you can't install or get the `bottle` tool to work. Here's a procedure for decrypting and extracting such a file _without_ using Bottle (though you still need the `bottle_key.txt` file you used to encrypt the file/directory).
+Let's say you have a `.tar.zst.age` file (or `.tar.gz.age` file) that you, at one point, encrypted with Bottle, but now you can't install or get the `bottle` tool to work. Here's a procedure for decrypting and extracting such a file _without_ using Bottle (though you still need the `bottle_key.txt` file you used to encrypt the file/directory).
 
 With [age installed](https://github.com/FiloSottile/age#installation), try the following three commands to decrypt and extract your Bottled directory:
 
