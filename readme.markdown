@@ -15,8 +15,8 @@ I would **NOT** recommend Bottle for backing up large amounts of data across mul
 ## Installation
 
 ### Prerequisites
-1. [Install age](https://github.com/FiloSottile/age#installation). Bottle requires age version 1.0+. The related `age-keygen`, which you'll also need, should be included with that install (check with `age-keygen --version` -- it should also be 1.0 or later).
-2. To use Bottle on directories, you'll need [tar](https://www.gnu.org/software/tar/) version 1.32 or higher available (run `tar --version` to check).
+1. [Install age](https://github.com/FiloSottile/age#installation). Bottle requires age version 1.0+. The related `age-keygen` command-line tool, which you'll also need in order to use Bottle, should be included with that install (check this by running `age-keygen --version` -- The version should also be 1.0 or later).
+2. To use Bottle on directories (as opposed to just individual files), you'll need [tar](https://www.gnu.org/software/tar/) version 1.32 or higher available (run `tar --version` to check).
 
 ### Install Bottle
 1. Clone down this Git repository.
